@@ -155,7 +155,9 @@ describe("physical trajectory regression cases", () => {
       ["yellow", -1],
     ] as const) {
       const robots = s.robots.filter((r) => r.team === team);
-      robots.forEach((r,i)=>expect(r.x).toBeCloseTo([-.24,-.45,-.66][i]*sign,12));
+      robots.forEach((r, i) =>
+        expect(r.x).toBeCloseTo([-0.24, -0.45, -0.66][i] * sign, 12),
+      );
       expect(robots.map((r) => r.y)).toEqual([0, 0.24, 0]);
       for (const r of robots) {
         expect(r.left).toBe(0);
@@ -226,4 +228,61 @@ describe("physical trajectory regression cases", () => {
         expect(out.ball).toEqual({ x: 0, y: 0, vx: 0, vy: 0 });
       }
   });
+});
+describe("collision impulses", () => {
+  it("separates two overlapping robots symmetrically without inventing a velocity", () => {
+    const s = referee(createMatch(), "start");
+    s.robots[0].x = 0;
+    s.robots[0].y = 0;
+    s.robots[1].x = 0.02;
+    s.robots[1].y = 0;
+    s.ball.y = 0.5;
+    const result = step(s, []);
+    expect(result.robots[0].x).toBeCloseTo(-0.043, 12);
+    expect(result.robots[1].x).toBeCloseTo(0.063, 12);
+    expect(result.robots[0].y).toBe(0);
+    expect(result.robots[1].y).toBe(0);
+  });
+  it("reflects an approaching ball on a stationary robot along the contact normal", () => {
+    const s = referee(createMatch(), "start");
+    s.robots[0].x = 0;
+    s.robots[0].y = 0;
+    s.ball = { x: 0, y: 0.05, vx: 0, vy: -0.1 };
+    const b = step(s, []).ball;
+    expect(b.x).toBe(0);
+    expect(b.y).toBeCloseTo(0.07435, 12);
+    expect(b.vx).toBe(0);
+    expect(b.vy).toBeCloseTo(0.0495, 12);
+  });
+  it("resolves a zero-distance ball contact without NaN or spurious impulse", () => {
+    const s = referee(createMatch(), "start");
+    s.robots[0].x = 0;
+    s.robots[0].y = 0;
+    s.ball = { x: 0, y: 0, vx: 0, vy: 0 };
+    const b = step(s, []).ball;
+    expect(b).toEqual({ x: 0.07435, y: 0, vx: 0, vy: 0 });
+  });
+  it("does not bounce a separating ball back into a robot", () => {
+    const s = referee(createMatch(), "start");
+    s.robots[0].x = 0;
+    s.robots[0].y = 0;
+    s.ball = { x: 0, y: 0.05, vx: 0, vy: 0.1 };
+    expect(step(s, []).ball.vy).toBeCloseTo(0.099, 12);
+  });
+});
+it("clears wheel commands when the referee pauses or calls a timeout", () => {
+  const moving = advance(referee(createMatch(), "start"), 6);
+  expect(moving.robots.some((r) => r.left !== 0 || r.right !== 0)).toBe(true);
+  for (const action of ["pause", "timeout-blue"] as const) {
+    const halted = referee(moving, action);
+    expect(halted.robots.every((r) => r.left === 0 && r.right === 0)).toBe(
+      true,
+    );
+  }
+});
+it("reconstructs the same next batch from a serialized checkpoint", () => {
+  const initial = advance(referee(createMatch(), "start"), 120);
+  const checkpoint = JSON.parse(JSON.stringify(initial));
+  expect(advance(checkpoint, 120)).toEqual(advance(initial, 120));
+  expect(advance(checkpoint, 120).tick).toBe(240);
 });

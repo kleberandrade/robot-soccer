@@ -1,0 +1,18 @@
+reference,quantity,part_or_requirement,dimension_mm,power_or_limit,status
+U1,1,Espressif ESP32-C3-MINI-1,13.2 x 16.6 x 2.4,3.3 V logic; reserve >=500 mA supply,Module datasheet checked; carrier not designed
+U2,1,Toshiba TB6612FNG SSOP24,See official package drawing,3.3 V VCC / 5 V VM; thermal review required,Datasheet checked; no carrier fabricated
+M1 M2,2,Pololu 6 V low-power micro metal gearmotor gearing TBD,Approx 26 x 12 x 10 body plus shaft,0.36 A stall at 6 V; operate at 5 V,Vendor family checked; exact gearing selection pending
+W1 W2,2,32 mm diameter wheel for 3 mm D shaft,32 diameter x <=7 width,Hub engagement to verify,Selection requirement
+REG1,1,Pololu D24V10F5,12.7 x 17.8 x 3.56,5 V / typical max 1 A; thermal derating,Vendor specs checked
+REG2,1,Pololu D24V10F3,12.7 x 17.8 x 3.56,3.3 V / typical max 1 A; thermal derating,Vendor family checked
+BAT1,1,Protected 2S LiPo 250-400 mAh selection gate,Must fit <=45 x 25 x 18 bay,6.4-8.4 V operating target; external balance charger,No measured SKU selected; verify pack/cell datasheet before build
+PROT1,1,2S per-cell protection plus 6.4 V cutoff/hysteresis,Reserve <=25 x 15 x 5,Overcurrent/undervoltage and chemistry-compatible thresholds,Selection requirement; not a claimed tested module
+SW1,1,Accessible mechanical supply switch,Reserve <=10 x 6 x 6,>=1 A DC at 8.4 V,Selection requirement
+F1,1,1 A supply fuse with suitable time-current curve,Reserve <=10 x 5 x 5,Verify inrush versus wire and battery protection,Selection requirement
+D1,1,Reverse-polarity Schottky or qualified ideal-diode circuit,Reserve <=8 x 6 x 3,>=2 A / >=20 V; account for dropout,Selection requirement
+C1 C2 C3,3,100 nF ceramic driver/rail bypass,0603/0805,>=16 V,Original wiring proposal
+C4,1,470 uF motor-rail bulk capacitor,Reserve <=8 diameter x 12 height,>=10 V low ESR,Selection requirement
+C5 C6,2,100 nF ceramic directly across motor terminals,0603/0805,>=16 V,Original EMI proposal
+R1,1,10 kohm STBY pulldown,0603/0805,Driver disabled during MCU reset,Required external component
+PCB1,1,Custom module and driver carrier,45 x 40 target,RF keepout and power thermal routing required,Not laid out or fabricated
+CHASSIS1,1,Nonconductive chassis and removable tag,70 x 70 x 65 target bare,Validate complete assembly <=75 mm cube,Dimension budget only

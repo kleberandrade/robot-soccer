@@ -1,0 +1,62 @@
+name: CI
+on: [push, pull_request, workflow_dispatch]
+permissions:
+  contents: read
+jobs:
+  software:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: soccer
+          POSTGRES_PASSWORD: local-development-only
+          POSTGRES_DB: soccer
+        ports: ["54329:5432"]
+        options: >-
+          --health-cmd "pg_isready -U soccer"
+          --health-interval 2s --health-retries 20
+    env:
+      DATABASE_URL: postgresql://soccer:local-development-only@127.0.0.1:54329/soccer
+      MATCH_ADMIN_TOKEN: ci-only-operator-token-at-least-32-characters
+      TURBO_TELEMETRY_DISABLED: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run db:migrate
+      - run: npm run db:migrate
+      - run: npm run typecheck
+      - run: npm run coverage
+      - run: npm run test:firmware
+      - run: npm run simulate
+      - run: npm run build
+      - name: HTTP smoke test with real PostgreSQL
+        run: |
+          npm run dev > /tmp/robot-soccer-next.log 2>&1 &
+          SERVER_PID=$!
+          trap 'kill "$SERVER_PID" 2>/dev/null || true' EXIT
+          for attempt in $(seq 1 60); do
+            if curl -fsS http://127.0.0.1:3107/api/health >/dev/null; then break; fi
+            sleep 1
+          done
+          npm run test:smoke
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: coverage
+          path: |
+            packages/*/coverage/
+            apps/web/coverage/
+  firmware:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install platformio==6.2.0
+      - run: pio run -d firmware

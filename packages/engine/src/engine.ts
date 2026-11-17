@@ -100,6 +100,12 @@ export function createMatch(
   kickoff(s);
   return s;
 }
+function stopWheels(s: Match) {
+  for (const r of s.robots) {
+    r.left = 0;
+    r.right = 0;
+  }
+}
 export function referee(state: Match, action: Action): Match {
   const s = structuredClone(state);
   if (action === "reset") return createMatch(s.config, s.strategies);
@@ -111,6 +117,7 @@ export function referee(state: Match, action: Action): Match {
   }
   if (s.phase !== "running")
     throw new Error("Referee action requires a running match");
+  stopWheels(s);
   if (action === "pause") {
     s.phase = "paused";
     return s;
@@ -213,6 +220,7 @@ function matchClock(s: Match) {
   s.elapsedTicks++;
   if (s.elapsedTicks < s.config.halfSeconds * 60 * s.period) return;
   s.phase = s.period === 1 ? "halftime" : "finished";
+  stopWheels(s);
   s.phaseTicks = 0;
 }
 export function step(state: Match, commands: Command[]): Match {
