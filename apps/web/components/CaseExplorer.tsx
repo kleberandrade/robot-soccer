@@ -1,10 +1,15 @@
 "use client";
+
+import { T } from "../i18n/client";
+
 import { Component, useState, type ReactNode } from "react";
 import dynamic from "next/dynamic";
 const CaseScene = dynamic(() => import("./CaseScene"), {
   ssr: false,
   loading: () => (
-    <div className="case-fallback">Preparing the CAD assembly…</div>
+    <div className="case-fallback">
+      <T>{"Preparing the CAD assembly…"}</T>
+    </div>
   ),
 });
 class CaseGuard extends Component<
@@ -18,8 +23,11 @@ class CaseGuard extends Component<
   render() {
     return this.state.failed ? (
       <p className="case-fallback">
-        The 3D preview could not load. The drawing and STL downloads remain
-        available.
+        <T>
+          {
+            "The 3D preview could not load. The drawing and STL downloads remain available."
+          }
+        </T>
       </p>
     ) : (
       this.props.children
@@ -33,18 +41,22 @@ export default function CaseExplorer() {
     <section className="case-explorer">
       <div className="case-toolbar">
         <div>
-          <strong>PARAMETRIC CASE / REV A</strong>
-          <span>Drag to orbit · scroll to zoom</span>
+          <strong>
+            <T>{"PARAMETRIC CASE / REV A"}</T>
+          </strong>
+          <span>
+            <T>{"Drag to orbit · scroll to zoom"}</T>
+          </span>
         </div>
         <div>
           <button
             aria-pressed={exploded}
             onClick={() => setExploded(!exploded)}
           >
-            Exploded view
+            <T>{"Exploded view"}</T>
           </button>
           <button aria-pressed={xray} onClick={() => setXray(!xray)}>
-            See through shell
+            <T>{"See through shell"}</T>
           </button>
         </div>
       </div>
@@ -59,23 +71,23 @@ export default function CaseExplorer() {
       <div className="case-legend">
         <span>
           <i style={{ background: "#263b41" }} />
-          Tray
+          <T>{"Tray"}</T>
         </span>
         <span>
           <i style={{ background: "#c5b89b" }} />
-          Removable deck
+          <T>{"Removable deck"}</T>
         </span>
         <span>
           <i style={{ background: "#607f78" }} />
-          Marker lid
+          <T>{"Marker lid"}</T>
         </span>
         <span>
           <i style={{ background: "#7492a2" }} />
-          Battery keepout
+          <T>{"Battery keepout"}</T>
         </span>
         <span>
           <i style={{ background: "#286d54" }} />
-          Carrier budget
+          <T>{"Carrier budget"}</T>
         </span>
       </div>
     </section>

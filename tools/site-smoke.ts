@@ -6,6 +6,9 @@ const pages = [
   "/lab",
   "/compete",
   "/rules",
+  "/privacy",
+  "/terms",
+  "/contributing",
   "/hardware",
   "/hardware/electronics",
   "/hardware/case",
@@ -61,6 +64,8 @@ assert.deepEqual(
     "electronics-deck.stl",
     "skid.stl",
     "GUIA-IMPRESSAO-E-MONTAGEM.md",
+    "PRINTING-AND-ASSEMBLY.md",
+    "GUIA-IMPRESION-Y-MONTAJE.md",
     "dimensions.svg",
     "dimensions.json",
     "mesh-report.json",
@@ -68,14 +73,15 @@ assert.deepEqual(
     "requirements.txt",
   ].sort(),
 );
-const guideResponse = await fetch(
-  `${base}/hardware/case/GUIA-IMPRESSAO-E-MONTAGEM.md`,
-);
-assert.equal(guideResponse.status, 200);
-assert.equal(
-  strFromU8(archive["GUIA-IMPRESSAO-E-MONTAGEM.md"]),
-  await guideResponse.text(),
-);
+for (const guide of [
+  "GUIA-IMPRESSAO-E-MONTAGEM.md",
+  "PRINTING-AND-ASSEMBLY.md",
+  "GUIA-IMPRESION-Y-MONTAJE.md",
+]) {
+  const guideResponse = await fetch(`${base}/hardware/case/${guide}`);
+  assert.equal(guideResponse.status, 200);
+  assert.equal(strFromU8(archive[guide]), await guideResponse.text());
+}
 for (const name of ["tray", "lid", "electronics-deck", "skid"]) {
   const r = await fetch(`${base}/hardware/case/${name}.stl`);
   assert.equal(r.status, 200);
@@ -95,7 +101,7 @@ console.log(
     pages: pages.length,
     engineeringDownloads: "verified",
     caseZip:
-      "10 allowlisted entries; guide and all 4 STL match published files",
+      "12 allowlisted entries; guide and all 4 STL match published files",
     privateFirmwareSecrets: "not published",
   }),
 );

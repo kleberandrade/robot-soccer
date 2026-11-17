@@ -1,7 +1,10 @@
+import { T } from "../i18n/client";
 export default function Loading() {
   return (
     <main>
-      <p role="status">Preparing the match laboratory…</p>
+      <p role="status">
+        <T>{"Preparing the match laboratory…"}</T>
+      </p>
     </main>
   );
 }

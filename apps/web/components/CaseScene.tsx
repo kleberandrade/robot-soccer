@@ -1,4 +1,5 @@
 "use client";
+
 import { Suspense } from "react";
 import { Canvas, useLoader } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
@@ -105,7 +106,7 @@ export default function CaseScene({
         </p>
       }
     >
-      <color attach="background" args={["#e8eeea"]} />
+      <color attach="background" args={["#0c141b"]} />
       <ambientLight intensity={1.8} />
       <directionalLight position={[0.1, 0.25, 0.2]} intensity={3} />
       <Suspense fallback={null}>

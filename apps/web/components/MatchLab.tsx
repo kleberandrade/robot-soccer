@@ -1,6 +1,11 @@
 "use client";
+import { LocalLink as Link } from "../i18n/client";
+
+import { T } from "../i18n/client";
+
 import dynamic from "next/dynamic";
 import SiteHeader from "./SiteHeader";
+import SiteFooter from "./SiteFooter";
 import CameraView, { fieldCovered } from "./CameraView";
 import RefereePanel from "./RefereePanel";
 import ViewSettings from "./ViewSettings";
@@ -8,7 +13,11 @@ import { useMatchLab } from "./useMatchLab";
 import { Configuration, RefereeDesk, Roster, time, teamName } from "./Panels";
 const Arena = dynamic(() => import("./Arena"), {
   ssr: false,
-  loading: () => <div className="arena-loading">Preparing 3D field…</div>,
+  loading: () => (
+    <div className="arena-loading">
+      <T>{"Preparing 3D field…"}</T>
+    </div>
+  ),
 });
 export default function MatchLab() {
   const lab = useMatchLab();
@@ -18,54 +27,80 @@ export default function MatchLab() {
       <SiteHeader active="/lab" />
       <section className="lab-heading">
         <div>
-          <p className="section-kicker">SIMULATION LABORATORY</p>
-          <h1>The match laboratory</h1>
+          <p className="section-kicker">
+            <T>{"SIMULATION LABORATORY"}</T>
+          </p>
+          <h1>
+            <T>{"The match laboratory"}</T>
+          </h1>
           <p>
-            Inspect the scene, test a strategy and manage the referee whistle.
+            <T>
+              {
+                "Inspect the scene, test a strategy and manage the referee whistle."
+              }
+            </T>
           </p>
         </div>
-        <a href="/compete" className="site-button outline">
-          Private competition
-        </a>
+        <Link href="/compete" className="site-button outline">
+          <T>{"Private competition"}</T>
+        </Link>
       </section>
       <section className="workspace" id="arena">
         <div className="match-column">
           <div className="arena-card">
             <div className="arena-top">
               <div>
-                <span className="live-dot" />{" "}
-                <strong>{row ? "SERVER MATCH" : "LOCAL PREVIEW"}</strong>
+                <span className="live-dot" />
+                <T> </T>
+                <strong>
+                  <T>{row ? "SERVER MATCH" : "LOCAL PREVIEW"}</T>
+                </strong>
                 <span className="muted">
-                  {" "}
-                  / {row ? "PostgreSQL checkpoints" : "not saved"}
+                  <T> </T>/{" "}
+                  <T>{row ? "PostgreSQL checkpoints" : "not saved"}</T>
                 </span>
               </div>
-              <span className="phase">{shown.phase}</span>
+              <span className="phase">
+                <T>{shown.phase}</T>
+              </span>
             </div>
             <div className="scoreboard">
               <div className="team-name">
                 <span className="team-dot blue" />
                 <div>
                   <strong>
-                    {teamName(shown.strategies.blue).toUpperCase()}
+                    <T>{teamName(shown.strategies.blue).toUpperCase()}</T>
                   </strong>
-                  <small>{shown.strategies.blue} · blue team</small>
+                  <small>
+                    <T>{shown.strategies.blue}</T>
+                    <T>{"· blue team"}</T>
+                  </small>
                 </div>
               </div>
               <div className="score">
-                <span>{shown.score.blue}</span>
+                <span>
+                  <T>{shown.score.blue}</T>
+                </span>
                 <i>:</i>
-                <span>{shown.score.yellow}</span>
+                <span>
+                  <T>{shown.score.yellow}</T>
+                </span>
                 <small>
-                  {time(shown.elapsedTicks)} <b>H{shown.period}</b>
+                  <T>{time(shown.elapsedTicks)}</T>{" "}
+                  <b>
+                    H<T>{shown.period}</T>
+                  </b>
                 </small>
               </div>
               <div className="team-name away">
                 <div>
                   <strong>
-                    {teamName(shown.strategies.yellow).toUpperCase()}
+                    <T>{teamName(shown.strategies.yellow).toUpperCase()}</T>
                   </strong>
-                  <small>{shown.strategies.yellow} · yellow team</small>
+                  <small>
+                    <T>{shown.strategies.yellow}</T>
+                    <T>{"· yellow team"}</T>
+                  </small>
                 </div>
                 <span className="team-dot yellow" />
               </div>
@@ -73,8 +108,12 @@ export default function MatchLab() {
             <div className="dual-arena">
               <section className="scene-pane">
                 <div className="viewport-heading">
-                  <strong>3D / INSPECT</strong>
-                  <span>Orbit · zoom · spinning wheels</span>
+                  <strong>
+                    <T>{"3D / INSPECT"}</T>
+                  </strong>
+                  <span>
+                    <T>{"Orbit · zoom · spinning wheels"}</T>
+                  </span>
                 </div>
                 <div
                   className="arena-view"
@@ -92,9 +131,13 @@ export default function MatchLab() {
               </section>
               <section className="camera-pane">
                 <div className="viewport-heading">
-                  <strong>2D / VIRTUAL CAMERA</strong>
+                  <strong>
+                    <T>{"2D / VIRTUAL CAMERA"}</T>
+                  </strong>
                   <span>
-                    {camera.height.toFixed(1)} m · {camera.tiltDegrees}° tilt
+                    <T>{camera.height.toFixed(1)}</T> m ·{" "}
+                    <T>{camera.tiltDegrees}</T>
+                    <T>{"° tilt"}</T>
                   </span>
                 </div>
                 <div className="camera-view">
@@ -107,23 +150,34 @@ export default function MatchLab() {
                       : "coverage-warning"
                   }
                 >
-                  {fieldCovered(shown, camera)
-                    ? "Full field in frame"
-                    : "Field cropped — adjust camera height / FOV"}
+                  <T>
+                    {fieldCovered(shown, camera)
+                      ? "Full field in frame"
+                      : "Field cropped — adjust camera height / FOV"}
+                  </T>
                 </div>
               </section>
             </div>
             <div className="measurement-bar">
               <span>
-                {shown.config.length.toFixed(2)} ×{" "}
-                {shown.config.width.toFixed(2)} m · goal{" "}
-                {shown.config.goalWidth.toFixed(2)} m
+                <T>{shown.config.length.toFixed(2)}</T> ×<T> </T>
+                <T>{shown.config.width.toFixed(2)}</T>
+                <T>{"m · goal"}</T>
+                <T> </T>
+                <T>{shown.config.goalWidth.toFixed(2)}</T> m
               </span>
-              <span>FRAME {shown.tick} · FIXED STEP 60 Hz</span>
+              <span>
+                <T>{"FRAME"}</T>
+                <T>{shown.tick}</T>
+                <T>{"· FIXED STEP 60 Hz"}</T>
+              </span>
             </div>
             <div className="viewbar">
               <span>
-                Drag to orbit <span className="muted">· Scroll to zoom</span>
+                <T>{"Drag to orbit"}</T>
+                <span className="muted">
+                  <T>{"· Scroll to zoom"}</T>
+                </span>
               </span>
               <div>
                 <button
@@ -131,7 +185,7 @@ export default function MatchLab() {
                   aria-pressed={trails}
                   onClick={() => setTrails(!trails)}
                 >
-                  Ball trail
+                  <T>{"Ball trail"}</T>
                 </button>
               </div>
             </div>
@@ -139,9 +193,11 @@ export default function MatchLab() {
           <RefereeDesk lab={lab} />
           <div className="statusbar" role="status">
             <span className={row ? "connected" : "muted"}>
-              ● {row ? "Connected to server" : "Preview mode"}
+              ● <T>{row ? "Connected to server" : "Preview mode"}</T>
             </span>
-            <span>{message}</span>
+            <span>
+              <T>{message}</T>
+            </span>
           </div>
         </div>
         <aside>
@@ -150,22 +206,23 @@ export default function MatchLab() {
           <Roster state={shown} />
           <Configuration lab={lab} />
           <section className="note">
-            <span>THE LAB, NOT THE LEAGUE</span>
+            <span>
+              <T>{"THE LAB, NOT THE LEAGUE"}</T>
+            </span>
             <p>
-              Perfect simulated observations. Synthetic camera projection.
-              Approximate contact physics. Competition rules and physical robots
-              require separate validation.
+              <T>
+                {
+                  "Perfect simulated observations. Synthetic camera projection. Approximate contact physics. Competition rules and physical robots require separate validation."
+                }
+              </T>
             </p>
-            <a href="/docs">Read the scope & assumptions </a>
+            <Link href="/docs">
+              <T>{"Read the scope & assumptions"}</T>
+            </Link>
           </section>
         </aside>
       </section>
-      <footer>
-        <span>
-          ROBOT-SOCCER <b> / </b> Built to experiment.
-        </span>
-        <span>Origin: Fatec Americana · MIT · v0.3</span>
-      </footer>
+      <SiteFooter />
     </main>
   );
 }

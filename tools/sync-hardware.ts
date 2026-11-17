@@ -5,6 +5,10 @@ import { fileURLToPath } from "node:url";
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), ".."),
   target = path.join(root, "apps/web/public/hardware");
 const files = [
+  ...["PRINTING-AND-ASSEMBLY.md", "GUIA-IMPRESION-Y-MONTAJE.md"].map((name) => [
+    `hardware/case/${name}`,
+    `case/${name}`,
+  ]),
   ["hardware/wiring.svg", "wiring.svg"],
   ["hardware/bom.csv", "bom.csv"],
   ["hardware/pinmap.csv", "pinmap.csv"],
@@ -41,6 +45,8 @@ const bundleFiles = [
   "electronics-deck.stl",
   "skid.stl",
   "GUIA-IMPRESSAO-E-MONTAGEM.md",
+  "PRINTING-AND-ASSEMBLY.md",
+  "GUIA-IMPRESION-Y-MONTAJE.md",
   "dimensions.svg",
   "dimensions.json",
   "mesh-report.json",

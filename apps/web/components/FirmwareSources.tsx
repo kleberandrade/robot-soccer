@@ -1,3 +1,4 @@
+import { T } from "../i18n/client";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 const sources = [
@@ -46,15 +47,22 @@ export default async function FirmwareSources() {
         <section key={s.file}>
           <header>
             <div>
-              <h2>{s.title}</h2>
-              <p>{s.summary}</p>
+              <h2>
+                <T>{s.title}</T>
+              </h2>
+              <p>
+                <T>{s.summary}</T>
+              </p>
             </div>
             <a href={`/hardware/firmware/${s.file}`} download>
-              Download {s.file}
+              <T>{"Download"}</T>
+              <T>{s.file}</T>
             </a>
           </header>
           <details open={i === 0}>
-            <summary>{s.file}</summary>
+            <summary>
+              <T>{s.file}</T>
+            </summary>
             <pre>
               <code>{s.code}</code>
             </pre>

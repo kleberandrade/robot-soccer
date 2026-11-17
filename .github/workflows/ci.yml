@@ -48,6 +48,7 @@ jobs:
           npm run test:rooms-smoke
           npm run test:remote-clients
           npm run test:site-smoke
+          npm run test:i18n-smoke
       - uses: actions/upload-artifact@v4
         if: always()
         with:

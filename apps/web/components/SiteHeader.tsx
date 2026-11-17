@@ -1,5 +1,10 @@
-import Link from "next/link";
+"use client";
+import SiteLogo from "./SiteLogo";
+import { T, useI18n } from "../i18n/client";
+import { Suspense } from "react";
+import { LocalLink as Link, LanguageSwitcher } from "../i18n/client";
 export default function SiteHeader({ active }: { active?: string }) {
+  const { t } = useI18n();
   const links = [
     ["Project", "/"],
     ["Laboratory", "/lab"],
@@ -11,28 +16,24 @@ export default function SiteHeader({ active }: { active?: string }) {
   return (
     <header className="site-header">
       <Link href="/" className="site-brand">
-        <span className="site-monogram">RS</span>
-        <span>
-          ROBOT<span className="brand-light">SOCCER</span>
-        </span>
+        <SiteLogo />
       </Link>
-      <nav aria-label="Main navigation">
+      <nav aria-label={t("Main navigation")}>
         {links.map(([label, url]) => (
           <Link
             key={url}
             href={url}
             aria-current={active === url ? "page" : undefined}
           >
-            {label}
+            <T>{label}</T>
           </Link>
         ))}
       </nav>
-      <a
-        className="source-link"
-        href="https://github.com/kleberandrade/robot-soccer"
-      >
-        Source code
-      </a>
+      <div className="header-actions">
+        <Suspense>
+          <LanguageSwitcher />
+        </Suspense>
+      </div>
     </header>
   );
 }

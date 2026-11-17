@@ -1,4 +1,6 @@
-import Link from "next/link";
+"use client";
+import { T, useI18n } from "../i18n/client";
+import { LocalLink as Link } from "../i18n/client";
 import SiteHeader from "./SiteHeader";
 import SiteFooter from "./SiteFooter";
 export default function DocumentLayout({
@@ -10,31 +12,60 @@ export default function DocumentLayout({
   active?: string;
   label?: string;
 }) {
+  const { t } = useI18n();
   return (
     <div className="public-site">
       <SiteHeader active={active} />
       <div className="document-layout">
         <aside className="document-sidebar">
-          <span className="section-kicker">{label}</span>
-          <nav aria-label="Documentation sections">
-            <Link href="/docs">Learning library</Link>
-            <Link href="/docs/first-match">Your first match</Link>
-            <Link href="/docs/differential-drive">Differential drive</Link>
-            <Link href="/docs/camera-and-markers">Camera and markers</Link>
-            <Link href="/docs/referee-and-restarts">Referee and restarts</Link>
-            <Link href="/rules">Rules and scope</Link>
-            <Link href="/hardware">Hardware reference</Link>
-            <Link href="/hardware/electronics">Electronic diagram</Link>
-            <Link href="/hardware/case">Case design</Link>
-            <Link href="/hardware/firmware">Robot firmware</Link>
-            <Link href="/docs/protocol">API and radio protocol</Link>
-            <Link href="/docs/remote-competition">Remote competitions</Link>
+          <span className="section-kicker">
+            <T>{label}</T>
+          </span>
+          <nav aria-label={t("Documentation sections")}>
+            <Link href="/docs">
+              <T>{"Learning library"}</T>
+            </Link>
+            <Link href="/docs/first-match">
+              <T>{"Your first match"}</T>
+            </Link>
+            <Link href="/docs/differential-drive">
+              <T>{"Differential drive"}</T>
+            </Link>
+            <Link href="/docs/camera-and-markers">
+              <T>{"Camera and markers"}</T>
+            </Link>
+            <Link href="/docs/referee-and-restarts">
+              <T>{"Referee and restarts"}</T>
+            </Link>
+            <Link href="/rules">
+              <T>{"Rules and scope"}</T>
+            </Link>
+            <Link href="/hardware">
+              <T>{"Hardware reference"}</T>
+            </Link>
+            <Link href="/hardware/electronics">
+              <T>{"Electronic diagram"}</T>
+            </Link>
+            <Link href="/hardware/case">
+              <T>{"Case design"}</T>
+            </Link>
+            <Link href="/hardware/firmware">
+              <T>{"Robot firmware"}</T>
+            </Link>
+            <Link href="/docs/protocol">
+              <T>{"API and radio protocol"}</T>
+            </Link>
+            <Link href="/docs/remote-competition">
+              <T>{"Remote competitions"}</T>
+            </Link>
           </nav>
           <Link className="site-button solid" href="/lab">
-            Open laboratory
+            <T>{"Open laboratory"}</T>
           </Link>
         </aside>
-        <main className="document-content">{children}</main>
+        <main className="document-content">
+          <T>{children}</T>
+        </main>
       </div>
       <SiteFooter />
     </div>

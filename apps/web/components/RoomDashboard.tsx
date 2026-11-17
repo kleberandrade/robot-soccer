@@ -1,4 +1,7 @@
 "use client";
+
+import { T, useI18n } from "../i18n/client";
+
 import { useState } from "react";
 import dynamic from "next/dynamic";
 import { type Team, type Decision } from "@robot-soccer/engine";
@@ -12,33 +15,49 @@ import {
 } from "./usePrivateRoom";
 const Arena = dynamic(() => import("./Arena"), {
   ssr: false,
-  loading: () => <div className="arena-loading">Preparing 3D field…</div>,
+  loading: () => (
+    <div className="arena-loading">
+      <T>{"Preparing 3D field…"}</T>
+    </div>
+  ),
 });
 type Lab = ReturnType<typeof usePrivateRoom>;
 function InvitationCards({ lab }: { lab: Lab }) {
   if (!lab.invitations) return null;
   return (
     <section className="room-invitations">
-      <h3>Invite your participants</h3>
+      <h3>
+        <T>{"Invite your participants"}</T>
+      </h3>
       <p>
-        Share each code privately with its intended team. Each invitation claims
-        one team only.
+        <T>
+          {
+            "Share each code privately with its intended team. Each invitation claims one team only."
+          }
+        </T>
       </p>
       <div>
         {(["blue", "yellow"] as const).map((team) => (
           <article key={team}>
-            <span>{team} invitation</span>
+            <span>
+              <T>{team}</T>
+              <T>{"invitation"}</T>
+            </span>
             <code>{lab.invitations![team].match(/.{1,4}/g)?.join("-")}</code>
           </article>
         ))}
       </div>
       <details>
-        <summary>Private spectator connection</summary>
+        <summary>
+          <T>{"Private spectator connection"}</T>
+        </summary>
         <p>
-          Room ID: <code>{lab.room?.id}</code>
+          <T>{"Room ID:"}</T>
+          <code>{lab.room?.id}</code>
         </p>
         <p>
-          Spectator key:{" "}
+          <T>{"Spectator key:"}</T>
+          <T> </T>
           <code className="break-key">{lab.invitations.spectatorKey}</code>
         </p>
       </details>
@@ -52,11 +71,15 @@ function HostDesk({ lab }: { lab: Lab }) {
   return (
     <section className="room-host">
       <div>
-        <span className="section-kicker">HOST REFEREE DESK</span>
+        <span className="section-kicker">
+          <T>{"HOST REFEREE DESK"}</T>
+        </span>
         <h3>
-          {r.match.restart?.stage === "setup"
-            ? `${r.match.restart.kind.replaceAll("-", " ")} · ${r.match.restart.team ?? "neutral"}`
-            : "Manage the official match"}
+          <T>
+            {r.match.restart?.stage === "setup"
+              ? `${r.match.restart.kind.replaceAll("-", " ")} · ${r.match.restart.team ?? "neutral"}`
+              : "Manage the official match"}
+          </T>
         </h3>
       </div>
       <div className="host-buttons">
@@ -66,59 +89,73 @@ function HostDesk({ lab }: { lab: Lab }) {
           }
           onClick={() => lab.act("start")}
         >
-          Whistle / resume
+          <T>{"Whistle / resume"}</T>
         </button>
         <button
           disabled={lab.busy || r.match.phase !== "running"}
           onClick={() => lab.act("pause")}
         >
-          Pause
+          <T>{"Pause"}</T>
         </button>
         <button disabled={lab.busy} onClick={() => lab.act("reset")}>
-          Reset match
+          <T>{"Reset match"}</T>
         </button>
       </div>
       <details>
-        <summary>Make a referee decision</summary>
+        <summary>
+          <T>{"Make a referee decision"}</T>
+        </summary>
         <div className="host-decision">
           <label>
-            Infraction
+            <T>{"Infraction"}</T>
             <select
               value={kind}
               onChange={(e) => setKind(e.target.value as Decision["kind"])}
             >
               <option value="defensive-overload">
-                Second defender involved
+                <T>{"Second defender involved"}</T>
               </option>
               <option value="attacking-overload">
-                Second attacker involved
+                <T>{"Second attacker involved"}</T>
               </option>
-              <option value="personal-foul">Illegal pushing</option>
-              <option value="handling">Illegal handling</option>
+              <option value="personal-foul">
+                <T>{"Illegal pushing"}</T>
+              </option>
+              <option value="handling">
+                <T>{"Illegal handling"}</T>
+              </option>
               <option value="keeper-retention">
-                Keeper possession exceeds 10 seconds
+                <T>{"Keeper possession exceeds 10 seconds"}</T>
               </option>
-              <option value="false-start">False start</option>
-              <option value="free-ball">Neutral free ball</option>
+              <option value="false-start">
+                <T>{"False start"}</T>
+              </option>
+              <option value="free-ball">
+                <T>{"Neutral free ball"}</T>
+              </option>
             </select>
           </label>
           <label>
-            Offending team
+            <T>{"Offending team"}</T>
             <select
               value={team}
               onChange={(e) =>
                 setTeam(e.target.value === "blue" ? "blue" : "yellow")
               }
             >
-              <option value="blue">Blue</option>
-              <option value="yellow">Yellow</option>
+              <option value="blue">
+                <T>{"Blue"}</T>
+              </option>
+              <option value="yellow">
+                <T>{"Yellow"}</T>
+              </option>
             </select>
           </label>
           <button
             disabled={lab.busy}
             onClick={() => lab.act("decision", { decision: { kind, team } })}
           >
-            Apply decision
+            <T>{"Apply decision"}</T>
           </button>
         </div>
       </details>
@@ -126,6 +163,7 @@ function HostDesk({ lab }: { lab: Lab }) {
   );
 }
 export default function RoomDashboard({ lab }: { lab: Lab }) {
+  const { locale } = useI18n();
   const [connectionText, setConnectionText] = useState("");
   const room = lab.room!,
     s = room.match,
@@ -134,20 +172,27 @@ export default function RoomDashboard({ lab }: { lab: Lab }) {
     <section className="room-dashboard">
       <header className="room-heading">
         <div>
-          <span className="section-kicker">PRIVATE COMPETITION</span>
+          <span className="section-kicker">
+            <T>{"PRIVATE COMPETITION"}</T>
+          </span>
           <h1>{room.name}</h1>
           <p>
-            {roleLabel(room.role)} · expires{" "}
-            {new Date(room.expiresAt).toLocaleString()}
+            <T>{roleLabel(room.role)}</T>
+            <T>{"· expires"}</T>
+            <T> </T>
+            <T>{new Date(room.expiresAt).toLocaleString(locale)}</T>
           </p>
         </div>
         <button onClick={() => downloadConnection(connection, room.role)}>
-          Save connection
+          <T>{"Save connection"}</T>
         </button>
       </header>
       <div className="room-save-note">
-        Save your connection before leaving. Keys stay in this browser's memory;
-        refresh requires your saved key.
+        <T>
+          {
+            "Save your connection before leaving. Keys stay in this browser's memory; refresh requires your saved key."
+          }
+        </T>
       </div>
       <details
         className="room-connection-settings"
@@ -156,10 +201,14 @@ export default function RoomDashboard({ lab }: { lab: Lab }) {
             setConnectionText(connectionSettings(connection));
         }}
       >
-        <summary>Show private connection settings</summary>
+        <summary>
+          <T>{"Show private connection settings"}</T>
+        </summary>
         <p>
-          If the download is unavailable, copy these settings into{" "}
-          <code>.env.room-{room.role}</code>. Keep this file private.
+          <T>{"If the download is unavailable, copy these settings into"}</T>
+          <T> </T>
+          <code>.env.room-{room.role}</code>
+          <T>{". Keep this file private."}</T>
         </p>
         <pre>
           <code>{connectionText}</code>
@@ -169,39 +218,55 @@ export default function RoomDashboard({ lab }: { lab: Lab }) {
       <div className="room-score">
         <div>
           <span className="team-dot blue" />
-          <strong>{room.participants.blue?.name ?? "Waiting for blue"}</strong>
+          <strong>
+            {room.participants.blue?.name ?? <T>Waiting for blue</T>}
+          </strong>
           <small>
-            {room.participants.blue ? "Team claimed" : "Invitation not used"}
+            <T>
+              {room.participants.blue ? "Team claimed" : "Invitation not used"}
+            </T>
           </small>
         </div>
         <div className="room-score-center">
           <strong>
-            {s.score.blue} : {s.score.yellow}
+            <T>{s.score.blue}</T> : <T>{s.score.yellow}</T>
           </strong>
           <span>
-            {time(s.elapsedTicks)} · Half {s.period} · {s.phase}
+            <T>{time(s.elapsedTicks)}</T>
+            <T>{"· Half"}</T>
+            <T>{s.period}</T> · <T>{s.phase}</T>
           </span>
         </div>
         <div>
           <span className="team-dot yellow" />
           <strong>
-            {room.participants.yellow?.name ?? "Waiting for yellow"}
+            {room.participants.yellow?.name ?? <T>Waiting for yellow</T>}
           </strong>
           <small>
-            {room.participants.yellow ? "Team claimed" : "Invitation not used"}
+            <T>
+              {room.participants.yellow
+                ? "Team claimed"
+                : "Invitation not used"}
+            </T>
           </small>
         </div>
       </div>
       <div className="room-dual-arena">
         <section>
-          <h3>3D inspection</h3>
+          <h3>
+            <T>{"3D inspection"}</T>
+          </h3>
           <div className="room-arena">
             <Arena state={s} trail={[]} camera={DEFAULT_CAMERA} rig={false} />
           </div>
         </section>
         <section>
           <h3>
-            Overhead camera <span>Frame {s.tick}</span>
+            <T>{"Overhead camera"}</T>
+            <span>
+              <T>{"Frame"}</T>
+              <T>{s.tick}</T>
+            </span>
           </h3>
           <div className="room-camera">
             <CameraView state={s} camera={DEFAULT_CAMERA} />
@@ -209,21 +274,34 @@ export default function RoomDashboard({ lab }: { lab: Lab }) {
         </section>
       </div>
       <div className="room-turn-status">
-        <span>Turn {room.turn}</span>
-        <span>{turnMessage(room)}</span>
-        <span>6 physics ticks per complete turn</span>
+        <span>
+          <T>{"Turn"}</T>
+          <T>{room.turn}</T>
+        </span>
+        <span>
+          <T>{turnMessage(room)}</T>
+        </span>
+        <span>
+          <T>{"6 physics ticks per complete turn"}</T>
+        </span>
       </div>
       {room.role === "host" ? <HostDesk lab={lab} /> : null}
       <ProgramGuide role={room.role} />
       <section className="room-events">
-        <h3>Referee record</h3>
+        <h3>
+          <T>{"Referee record"}</T>
+        </h3>
         {s.officials.events
           .slice(-8)
           .reverse()
           .map((e) => (
             <p key={e.id}>
-              <time>{time(e.matchTick)}</time>
-              <span>{e.message}</span>
+              <time>
+                <T>{time(e.matchTick)}</T>
+              </time>
+              <span>
+                <T>{e.message}</T>
+              </span>
             </p>
           ))}
       </section>
@@ -240,18 +318,28 @@ function ProgramGuide({ role }: { role: string }) {
   if (role !== "blue" && role !== "yellow") return null;
   return (
     <section className="room-code-guide">
-      <span className="section-kicker">CONNECT YOUR PROGRAM</span>
-      <h3>Keep your strategy on your computer.</h3>
+      <span className="section-kicker">
+        <T>{"CONNECT YOUR PROGRAM"}</T>
+      </span>
+      <h3>
+        <T>{"Keep your strategy on your computer."}</T>
+      </h3>
       <p>
-        Save your connection above, place the downloaded file in your local
-        project, then run either supplied example:
+        <T>
+          {
+            "Save your connection above, place the downloaded file in your local project, then run either supplied example:"
+          }
+        </T>
       </p>
       <pre>
         <code>{`node --env-file=.env.room-${role} --import tsx examples/remote-team.ts koativa\nnode --env-file=.env.room-${role} --import tsx examples/remote-team.ts circuit`}</code>
       </pre>
       <p>
-        The host whistles when both teams are ready. Your program waits while
-        the referee stops play. Keep the key private and outside Git.
+        <T>
+          {
+            "The host whistles when both teams are ready. Your program waits while the referee stops play. Keep the key private and outside Git."
+          }
+        </T>
       </p>
     </section>
   );

@@ -35,4 +35,4 @@ The tray/deck nominal battery-intersection checks and closed-edge checks are rec
 
 ## Download and printing guide
 
-The case page provides a single ZIP containing all four STL files, the Portuguese `GUIA-IMPRESSAO-E-MONTAGEM.md`, dimension drawing, parameters, mesh report and editable source. The archive is regenerated from an explicit allowlist by `tools/sync-hardware.ts` before every web build. The same guide is readable on the case page and covers slicing, nominal orientations, fit coupons, provisional fasteners, dry assembly and inspection; settings are proposals awaiting physical validation.
+The case page provides a single ZIP containing all four STL files, printing/assembly guides in Portuguese, English and Spanish, dimension drawing, parameters, mesh report and editable source. The archive is regenerated from an explicit allowlist by `tools/sync-hardware.ts` before every web build. The selected-language guide is readable on the case page and covers slicing, nominal orientations, fit coupons, provisional fasteners, dry assembly and inspection; settings are proposals awaiting physical validation.

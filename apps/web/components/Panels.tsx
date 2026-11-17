@@ -1,4 +1,7 @@
 "use client";
+
+import { T } from "../i18n/client";
+
 import {
   CONFIG,
   USER_CONFIG,
@@ -33,9 +36,11 @@ export function Configuration({ lab }: { lab: Lab }) {
   } = lab;
   return (
     <details className="panel config-panel">
-      <summary>04 / Dimensions, teams & connection</summary>
+      <summary>
+        <T>{"04 / Dimensions, teams & connection"}</T>
+      </summary>
       <label>
-        Reference preset
+        <T>{"Reference preset"}</T>
         <select
           value={config.ruleset}
           onChange={(e) =>
@@ -49,17 +54,22 @@ export function Configuration({ lab }: { lab: Lab }) {
           }
         >
           <option value="vsss-larc-reference">
-            VSSS / organizer-linked LARC reference
+            <T>{"VSSS / organizer-linked LARC reference"}</T>
           </option>
           <option value="user-reference">
-            Original user reference / 1.50 × 1.20 m
+            <T>{"Original user reference / 1.50 × 1.20 m"}</T>
           </option>
-          <option value="custom">Custom training configuration</option>
+          <option value="custom">
+            <T>{"Custom training configuration"}</T>
+          </option>
         </select>
       </label>
       <p className="help">
-        Configuration applies to a new match. Preview is local; server matches
-        use a dedicated PostgreSQL database.
+        <T>
+          {
+            "Configuration applies to a new match. Preview is local; server matches use a dedicated PostgreSQL database."
+          }
+        </T>
       </p>
       <div className="form-grid">
         {(
@@ -78,21 +88,23 @@ export function Configuration({ lab }: { lab: Lab }) {
           ] as const
         ).map((key) => (
           <label key={key}>
-            {
+            <T>
               {
-                length: "Length (m)",
-                width: "Width (m)",
-                goalWidth: "Goal mouth (m)",
-                robotSide: "Robot side (m)",
-                robotHeight: "Robot height (m)",
-                wheelBase: "Axle track (m)",
-                wheelRadius: "Wheel radius (m)",
-                motorAcceleration: "Wheel acceleration (m/s²)",
-                halfSeconds: "Half (s)",
-                intervalSeconds: "Interval (s)",
-                timeoutSeconds: "Timeout (s)",
-              }[key]
-            }
+                {
+                  length: "Length (m)",
+                  width: "Width (m)",
+                  goalWidth: "Goal mouth (m)",
+                  robotSide: "Robot side (m)",
+                  robotHeight: "Robot height (m)",
+                  wheelBase: "Axle track (m)",
+                  wheelRadius: "Wheel radius (m)",
+                  motorAcceleration: "Wheel acceleration (m/s²)",
+                  halfSeconds: "Half (s)",
+                  intervalSeconds: "Interval (s)",
+                  timeoutSeconds: "Timeout (s)",
+                }[key]
+              }
+            </T>
             <input
               type="number"
               step={key.endsWith("Seconds") ? 1 : 0.001}
@@ -116,11 +128,12 @@ export function Configuration({ lab }: { lab: Lab }) {
             setConfig({ ...config, automaticReferee: e.target.checked })
           }
         />
-        Automatic referee (simulated contact thresholds)
+        <T>{"Automatic referee (simulated contact thresholds)"}</T>
       </label>
       {(["blue", "yellow"] as const).map((team) => (
         <label key={team}>
-          {team} strategy
+          <T>{team}</T>
+          <T>{"strategy"}</T>
           <select
             value={strategies[team]}
             onChange={(e) =>
@@ -130,16 +143,20 @@ export function Configuration({ lab }: { lab: Lab }) {
               })
             }
           >
-            <option value="balanced">Koativa / balanced roles</option>
-            <option value="press">Circuit / supporting attack</option>
+            <option value="balanced">
+              <T>{"Koativa / balanced roles"}</T>
+            </option>
+            <option value="press">
+              <T>{"Circuit / supporting attack"}</T>
+            </option>
           </select>
         </label>
       ))}
       <button disabled={busy} onClick={preview}>
-        Apply to preview
+        <T>{"Apply to preview"}</T>
       </button>
       <label>
-        Operator token
+        <T>{"Operator token"}</T>
         <input
           type="password"
           autoComplete="off"
@@ -153,10 +170,10 @@ export function Configuration({ lab }: { lab: Lab }) {
         disabled={busy || token.length < 32}
         onClick={() => connect()}
       >
-        Create server match
+        <T>{"Create server match"}</T>
       </button>
       <label>
-        Existing match ID
+        <T>{"Existing match ID"}</T>
         <input
           value={matchId}
           onChange={(e) => setMatchId(e.target.value)}
@@ -164,7 +181,7 @@ export function Configuration({ lab }: { lab: Lab }) {
         />
       </label>
       <button disabled={busy || !matchId} onClick={() => connect(true)}>
-        Connect / spectate
+        <T>{"Connect / spectate"}</T>
       </button>
       {row ? (
         <a
@@ -173,7 +190,7 @@ export function Configuration({ lab }: { lab: Lab }) {
           target="_blank"
           rel="noreferrer"
         >
-          Open replay chunks
+          <T>{"Open replay chunks"}</T>
         </a>
       ) : null}
     </details>
@@ -183,23 +200,37 @@ export function Roster({ state }: { state: Match }) {
   return (
     <section className="panel">
       <div className="panel-heading">
-        <span className="eyebrow">01 / LINEUP</span>
-        <span className="pill">AUTONOMOUS</span>
+        <span className="eyebrow">
+          <T>{"01 / LINEUP"}</T>
+        </span>
+        <span className="pill">
+          <T>{"AUTONOMOUS"}</T>
+        </span>
       </div>
-      <h2>Meet the teams</h2>
+      <h2>
+        <T>{"Meet the teams"}</T>
+      </h2>
       {(["blue", "yellow"] as const).map((team) => (
         <div className="roster" key={team}>
           <div className="roster-title">
             <span className={`team-dot ${team}`} />
-            <strong>{teamName(state.strategies[team])}</strong>
-            <span>{team.toUpperCase()}</span>
+            <strong>
+              <T>{teamName(state.strategies[team])}</T>
+            </strong>
+            <span>
+              <T>{team.toUpperCase()}</T>
+            </span>
           </div>
           {state.robots
             .filter((r) => r.team === team)
             .map((r) => (
               <div className="robot-row" key={r.id}>
-                <span className={`number ${team}`}>{r.id.slice(-1)}</span>
-                <span>{r.role}</span>
+                <span className={`number ${team}`}>
+                  <T>{r.id.slice(-1)}</T>
+                </span>
+                <span>
+                  <T>{r.role}</T>
+                </span>
                 <code>
                   {r.excludedUntil !== null
                     ? "EXCLUDED"
@@ -219,8 +250,12 @@ export function RefereeDesk({ lab }: { lab: Lab }) {
   return (
     <div className="controls-card">
       <div>
-        <p className="eyebrow">REFEREE DESK</p>
-        <p>{phaseMessage(shown)}</p>
+        <p className="eyebrow">
+          <T>{"REFEREE DESK"}</T>
+        </p>
+        <p>
+          <T>{phaseMessage(shown)}</T>
+        </p>
       </div>
       <div className="controls">
         {buttons.map(([key, label, disabled], i) => (
@@ -230,7 +265,7 @@ export function RefereeDesk({ lab }: { lab: Lab }) {
             disabled={disabled}
             onClick={() => action(key)}
           >
-            {label}
+            <T>{label}</T>
           </button>
         ))}
       </div>

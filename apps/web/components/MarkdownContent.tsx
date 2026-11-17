@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { LocalLink } from "../i18n/client";
 import ReactMarkdown, { defaultUrlTransform } from "react-markdown";
 import remarkGfm from "remark-gfm";
 export function contentUrl(url: string) {
@@ -43,6 +44,9 @@ export default function MarkdownContent({ children }: { children: string }) {
       remarkPlugins={[remarkGfm]}
       urlTransform={contentUrl}
       components={{
+        a: ({ href, children }) => (
+          <LocalLink href={href ?? "#"}>{children}</LocalLink>
+        ),
         img: ({ src, alt }) =>
           typeof src === "string" ? (
             <Image

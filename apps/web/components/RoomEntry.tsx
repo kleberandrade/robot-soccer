@@ -1,8 +1,12 @@
 "use client";
+
+import { T, useI18n } from "../i18n/client";
+
 import { useState } from "react";
 import type { usePrivateRoom } from "./usePrivateRoom";
 type Lab = ReturnType<typeof usePrivateRoom>;
 export default function RoomEntry({ lab }: { lab: Lab }) {
+  const { t } = useI18n();
   const [mode, setMode] = useState<"join" | "create" | "resume">("join"),
     [code, setCode] = useState(""),
     [name, setName] = useState(""),
@@ -11,7 +15,7 @@ export default function RoomEntry({ lab }: { lab: Lab }) {
     [key, setKey] = useState("");
   return (
     <section className="room-entry">
-      <div className="entry-tabs" role="tablist" aria-label="Room access">
+      <div className="entry-tabs" role="tablist" aria-label={t("Room access")}>
         {(["join", "create", "resume"] as const).map((m) => (
           <button
             role="tab"
@@ -19,11 +23,13 @@ export default function RoomEntry({ lab }: { lab: Lab }) {
             aria-selected={mode === m}
             onClick={() => setMode(m)}
           >
-            {m === "join"
-              ? "Join a team"
-              : m === "create"
-                ? "Create a room"
-                : "Reconnect"}
+            <T>
+              {m === "join"
+                ? "Join a team"
+                : m === "create"
+                  ? "Create a room"
+                  : "Reconnect"}
+            </T>
           </button>
         ))}
       </div>
@@ -34,13 +40,18 @@ export default function RoomEntry({ lab }: { lab: Lab }) {
             void lab.join(code, name);
           }}
         >
-          <h2>Take your place on the field.</h2>
+          <h2>
+            <T>{"Take your place on the field."}</T>
+          </h2>
           <p>
-            Use the private team invitation supplied by the host. Blue and
-            yellow have separate invitations.
+            <T>
+              {
+                "Use the private team invitation supplied by the host. Blue and yellow have separate invitations."
+              }
+            </T>
           </p>
           <label>
-            Team invitation
+            <T>{"Team invitation"}</T>
             <input
               value={code}
               onChange={(e) => setCode(e.target.value)}
@@ -52,7 +63,7 @@ export default function RoomEntry({ lab }: { lab: Lab }) {
             />
           </label>
           <label>
-            Your team name
+            <T>{"Your team name"}</T>
             <input
               value={name}
               onChange={(e) => setName(e.target.value)}
@@ -62,7 +73,7 @@ export default function RoomEntry({ lab }: { lab: Lab }) {
             />
           </label>
           <button className="site-button solid" disabled={lab.busy}>
-            Join private room
+            <T>{"Join private room"}</T>
           </button>
         </form>
       ) : null}
@@ -74,23 +85,28 @@ export default function RoomEntry({ lab }: { lab: Lab }) {
             setOperator("");
           }}
         >
-          <h2>A private match, on your terms.</h2>
+          <h2>
+            <T>{"A private match, on your terms."}</T>
+          </h2>
           <p>
-            Create a room with separate invitations for each participant. Only
-            the host manages the referee whistle.
+            <T>
+              {
+                "Create a room with separate invitations for each participant. Only the host manages the referee whistle."
+              }
+            </T>
           </p>
           <label>
-            Competition name
+            <T>{"Competition name"}</T>
             <input
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder="Friday robotics practice"
+              placeholder={t("Friday robotics practice")}
               maxLength={60}
               required
             />
           </label>
           <label>
-            Server operator token
+            <T>{"Server operator token"}</T>
             <input
               type="password"
               value={operator}
@@ -101,11 +117,14 @@ export default function RoomEntry({ lab }: { lab: Lab }) {
             />
           </label>
           <small>
-            Room creation requires the server operator. Participants receive
-            their own private team access.
+            <T>
+              {
+                "Room creation requires the server operator. Participants receive their own private team access."
+              }
+            </T>
           </small>
           <button className="site-button solid" disabled={lab.busy}>
-            Create private room
+            <T>{"Create private room"}</T>
           </button>
         </form>
       ) : null}
@@ -116,13 +135,18 @@ export default function RoomEntry({ lab }: { lab: Lab }) {
             void lab.connect({ id, key });
           }}
         >
-          <h2>Return to your competition.</h2>
+          <h2>
+            <T>{"Return to your competition."}</T>
+          </h2>
           <p>
-            Use the room ID and your saved host, team or spectator key. No key
-            is added to the page address.
+            <T>
+              {
+                "Use the room ID and your saved host, team or spectator key. No key is added to the page address."
+              }
+            </T>
           </p>
           <label>
-            Room ID
+            <T>{"Room ID"}</T>
             <input
               value={id}
               onChange={(e) => setId(e.target.value)}
@@ -131,7 +155,7 @@ export default function RoomEntry({ lab }: { lab: Lab }) {
             />
           </label>
           <label>
-            Private connection key
+            <T>{"Private connection key"}</T>
             <input
               type="password"
               value={key}
@@ -141,7 +165,7 @@ export default function RoomEntry({ lab }: { lab: Lab }) {
             />
           </label>
           <button className="site-button solid" disabled={lab.busy}>
-            Reconnect to room
+            <T>{"Reconnect to room"}</T>
           </button>
         </form>
       ) : null}

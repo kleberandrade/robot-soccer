@@ -1,4 +1,7 @@
 "use client";
+
+import { T } from "../i18n/client";
+
 import { useState } from "react";
 import { type Decision, type Team } from "@robot-soccer/engine";
 import type { Lab } from "./useMatchLab";
@@ -33,36 +36,55 @@ export default function RefereePanel({ lab }: { lab: Lab }) {
   return (
     <section className="panel referee-panel">
       <div className="panel-heading">
-        <span className="eyebrow">02 / REFEREE</span>
+        <span className="eyebrow">
+          <T>{"02 / REFEREE"}</T>
+        </span>
         <span className="pill">
-          {shown.config.automaticReferee ? "AUTO + OFFICIAL" : "OFFICIAL CALLS"}
+          <T>
+            {shown.config.automaticReferee
+              ? "AUTO + OFFICIAL"
+              : "OFFICIAL CALLS"}
+          </T>
         </span>
       </div>
-      <h2>Fouls & restarts</h2>
+      <h2>
+        <T>{"Fouls & restarts"}</T>
+      </h2>
       <div className="foul-totals">
         <span>
-          Blue <strong>{shown.officials.fouls.blue}</strong>
+          <T>{"Blue"}</T>
+          <strong>
+            <T>{shown.officials.fouls.blue}</T>
+          </strong>
           <small>
-            {shown.officials.yellowCards.blue} yellow · {shown.timeouts.blue}/
-            {shown.config.timeoutLimit} timeouts
+            <T>{shown.officials.yellowCards.blue}</T>
+            <T>{"yellow ·"}</T>
+            <T>{shown.timeouts.blue}</T>/<T>{shown.config.timeoutLimit}</T>
+            <T>{"timeouts"}</T>
           </small>
         </span>
         <span>
-          Yellow <strong>{shown.officials.fouls.yellow}</strong>
+          <T>{"Yellow"}</T>
+          <strong>
+            <T>{shown.officials.fouls.yellow}</T>
+          </strong>
           <small>
-            {shown.officials.yellowCards.yellow} yellow ·{" "}
-            {shown.timeouts.yellow}/{shown.config.timeoutLimit} timeouts
+            <T>{shown.officials.yellowCards.yellow}</T>
+            <T>{"yellow ·"}</T>
+            <T> </T>
+            <T>{shown.timeouts.yellow}</T>/<T>{shown.config.timeoutLimit}</T>
+            <T>{"timeouts"}</T>
           </small>
         </span>
       </div>
       {shown.restart?.stage === "setup" ? (
         <p className="restart-call">
           <strong>
-            {shown.restart.kind.replaceAll("-", " ").toUpperCase()}
+            <T>{shown.restart.kind.replaceAll("-", " ").toUpperCase()}</T>
           </strong>
           <span>
-            {shown.restart.team ?? "Neutral ball"} · waiting for the referee
-            whistle
+            <T>{shown.restart.team ?? "Neutral ball"}</T>
+            <T>{"· waiting for the referee whistle"}</T>
           </span>
         </p>
       ) : null}
@@ -72,22 +94,33 @@ export default function RefereePanel({ lab }: { lab: Lab }) {
           .reverse()
           .map((e) => (
             <li key={e.id}>
-              <time>{time(e.matchTick)}</time>
+              <time>
+                <T>{time(e.matchTick)}</T>
+              </time>
               <div>
-                <strong>{e.kind.replaceAll("-", " ")}</strong>
-                <small>{e.message}</small>
+                <strong>
+                  <T>{e.kind.replaceAll("-", " ")}</T>
+                </strong>
+                <small>
+                  <T>{e.message}</T>
+                </small>
               </div>
             </li>
           ))}
       </ol>
       <details className="official-controls">
-        <summary>Make a referee decision</summary>
+        <summary>
+          <T>{"Make a referee decision"}</T>
+        </summary>
         <p className="help">
-          The human official has the final decision. This changes the restart,
-          never individual wheel commands.
+          <T>
+            {
+              "The human official has the final decision. This changes the restart, never individual wheel commands."
+            }
+          </T>
         </p>
         <label>
-          Infraction / decision
+          <T>{"Infraction / decision"}</T>
           <select
             value={kind}
             onChange={(e) => {
@@ -97,29 +130,35 @@ export default function RefereePanel({ lab }: { lab: Lab }) {
           >
             {decisions.map((d) => (
               <option key={d.kind} value={d.kind}>
-                {d.label}
+                <T>{d.label}</T>
               </option>
             ))}
           </select>
         </label>
         <div className="form-grid">
           <label>
-            Offending team
+            <T>{"Offending team"}</T>
             <select
               value={team}
               onChange={(e) =>
                 setTeam(e.target.value === "blue" ? "blue" : "yellow")
               }
             >
-              <option value="blue">Blue</option>
-              <option value="yellow">Yellow</option>
+              <option value="blue">
+                <T>{"Blue"}</T>
+              </option>
+              <option value="yellow">
+                <T>{"Yellow"}</T>
+              </option>
             </select>
           </label>
           <label>
-            Robot involved
+            <T>{"Robot involved"}</T>
             <select value={index} onChange={(e) => setIndex(e.target.value)}>
               {["0", "1", "2"].map((id) => (
-                <option key={id}>{id}</option>
+                <option key={id}>
+                  <T>{id}</T>
+                </option>
               ))}
             </select>
           </label>
@@ -129,7 +168,7 @@ export default function RefereePanel({ lab }: { lab: Lab }) {
           disabled={locked}
           onClick={() => decide({ kind, team, robotId: `${team}-${index}` })}
         >
-          Apply referee decision
+          <T>{"Apply referee decision"}</T>
         </button>
       </details>
     </section>
