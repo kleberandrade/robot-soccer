@@ -2,9 +2,9 @@ import { timingSafeEqual } from 'node:crypto';
 export function authorized(request:Request){
  const expected=process.env.MATCH_ADMIN_TOKEN;
  if(!expected||expected.length<32)return false;
- const actual=request.headers.get('authorization')??'';
- const wanted=`Bearer ${expected}`;
- return actual.length===wanted.length&&timingSafeEqual(Buffer.from(actual),Buffer.from(wanted));
+ const actual=Buffer.from(request.headers.get('authorization')??'');
+ const wanted=Buffer.from(`Bearer ${expected}`);
+ return actual.length===wanted.length&&timingSafeEqual(actual,wanted);
 }
 export async function body(request:Request):Promise<unknown>{
  // Read a bounded stream; Content-Length alone is not a trustworthy limit.

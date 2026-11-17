@@ -10,3 +10,4 @@ target/
 *.tsbuildinfo
 playwright-report/
 test-results/
+firmware/include/secrets.h

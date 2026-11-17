@@ -12,9 +12,9 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "coverage": "vitest run --coverage",
-    "simulate": "tsx scripts/simulate.ts",
-    "db:migrate": "tsx scripts/database.ts",
-    "bridge": "tsx scripts/bridge.ts"
+    "simulate": "node --import tsx scripts/simulate.ts",
+    "db:migrate": "node --import tsx scripts/database.ts",
+    "bridge": "node --import tsx scripts/bridge.ts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.2.1",
