@@ -9,7 +9,9 @@
 
 An autonomous 3×3 Very Small Size Soccer laboratory: deterministic simulation, a real 3D Next.js viewer, bounded server execution, PostgreSQL checkpoints, two example strategies, and an ESP32 radio/drive reference. This is an experimental platform, not a certified competition system.
 
-![Public 3D match laboratory with a server match persisted in Neon](docs/assets/match-lab.jpg)
+[Open the live laboratory](https://robot-soccer.vercel.app) · [Read the learning articles](https://robot-soccer.vercel.app/docs)
+
+![Synchronized 3D and overhead camera laboratory](docs/assets/match-lab-v2.jpg)
 
 ## Run locally
 
@@ -22,7 +24,7 @@ npm run dev
 npm test
 npm run typecheck
 npm run build
-npm run simulate
+npm run simulate -- --blue koativa --yellow circuit --half 10
 npm run test:firmware
 ```
 
@@ -43,7 +45,7 @@ DATABASE_URL=postgresql://soccer:local-development-only@127.0.0.1:54329/soccer n
 npm run dev
 ```
 
-Open **Configure & connect**, enter the server operator token, select the two registered strategies, and create a server match. Use **Start match** at the referee desk. The token stays only in browser memory. Keep one operator tab open to request simulation batches. Closing all operator clients stops advancement; background tabs may be throttled. Spectators use the match UUID and read saved state. Simulated time follows computed ticks, not wall time: network latency and playback introduce delay. This is live computation, not a prerecorded demo or a permanent hosted process.
+Open **Dimensions, teams & connection**, enter the server operator token, select the two registered strategies, and create a server match. Use **Start match** at the referee desk. The token stays only in browser memory. Keep one operator tab open to request simulation batches. Closing all operator clients stops advancement; background tabs may be throttled. Spectators use the match UUID and read saved state. Simulated time follows computed ticks, not wall time: network latency and playback introduce delay. This is live computation, not a prerecorded demo or a permanent hosted process.
 
 `npm run db:migrate` applies versioned schema files and an idempotent team seed. It requires `DATABASE_URL` in its process environment; Next.js's `.env.local` file is not implicitly loaded by command-line tools. For a local smoke test, use `node --env-file=apps/web/.env.local --import tsx tools/smoke.ts` while the dev server runs. It creates one test match, verifies concurrent update rejection, and leaves that match available to inspect.
 
@@ -53,22 +55,37 @@ The chosen stack is **Next.js + Vercel + Neon PostgreSQL**. Import this reposito
 
 Do not run migrations during each request or preview build. Do not reuse another application's database. No upgrade, paid capacity, or other project's resources are required by this implementation. Actual account/deployment verification is recorded in [the work log](docs/WORK_LOG.md); a stack badge is not a claim that a deployment or database has been provisioned.
 
+## Learn by doing
+
+Start with [Your first match and two example teams](docs/articles/first-match.md), then explore [Differential drive](docs/articles/differential-drive.md), [Fouls and restarts](docs/articles/referee-and-restarts.md), and [Camera, markers and scale](docs/articles/camera-and-markers.md). The same original articles are available in the [web documentation](https://robot-soccer.vercel.app/docs), with exercises, units, worked calculations, source links and code you can run.
+
+**Koativa** (`packages/engine/src/teams/koativa.ts`) uses a striker, screening defender and keeper. **Circuit** (`packages/engine/src/teams/circuit.ts`) adds a supporting attacker. Both are editable TypeScript examples; their stable registered IDs are `balanced` and `press`. They are teaching strategies, without a claim of association with a real competing team.
+
+```sh
+npm run simulate -- --blue koativa --yellow circuit --half 10
+npm run simulate -- --blue circuit --yellow koativa --half 10
+```
+
+The runner acknowledges referee stoppages automatically; the web interface waits for **Whistle / resume**. Compare a controlled change with the same configuration and engine version.
+
 ## What's implemented
 
-- Six differential-drive robots with striker, defender and keeper roles, configurable field/timings, a 60 Hz pure simulation step, approximate circular contacts, wall reflection, goals and scores.
-- Start, pause, reset, two halves, a timed interval, changed attacking direction, one technical timeout per team under the user-reference preset, and end-of-match state.
-- Independent observations, bounded versioned command validation, balanced and high-press registered strategies, deterministic terminal runner and checkpoint replay chunks.
-- A proportional Three.js/R3F field, camera orbit/zoom, robot IDs, ball trail, lineup/command display, match/connection status, responsive layout, keyboard controls and useful 2D WebGL fallback.
-- PostgreSQL schema, idempotent migration/seed, authenticated mutations and atomic optimistic revision checks. Replay reads are paginated (20 chunks).
-- ESP32-C3 firmware build, HMAC-authenticated UDP commands, monotonic sequence validation, safe initial state, stop-on-expiry/disconnect, dry-run bridge, and native parser tests.
+- Six two-wheel robots, acceleration-limited differential drive, configurable body/axle/wheel dimensions and wheel rotation integrated from traveled distance. Stops freeze the authoritative wheel phases.
+- Simultaneous 3D inspection and a synthetic 2D pinhole camera image of the same frame. Configure camera height, tilt, yaw and FOV; inspect its rig/frustum in 3D. Metric roof markers encode team and robot identity.
+- The selected organizer-linked VSSS reference preset: 1.50 × 1.30 m black field, chamfers, goal pockets, goal-area ellipses, restart marks, two 300 s halves, 480 s interval and two 180 s technical timeouts per team. The original user-reference preset remains separate.
+- Automatic participation/area infractions, sustained pushing, keeper retention and contested stalemates; manual referee decisions; penalties, free kicks, goal kicks, free balls and kickoffs. Stopped restarts await a whistle. Repeated false starts have warnings, escalation and penalty-keeper cautions/exclusion.
+- Independent observations, bounded commands, trusted Koativa/Circuit strategies, a deterministic terminal runner and replay checkpoints. PostgreSQL mutations require an operator token and revision check.
+- ESP32-C3 firmware reference, authenticated UDP commands, monotonic sequences, expiry/disconnect shutdown, dry-run bridge and native parser tests.
 
-## Limits and next steps
+## Rules and practical limits
 
-Physics uses circles around 75 mm robot boxes and is an approximation, not a rigid-body solver. Friction and open-loop motor conversion are illustrative and uncalibrated. Strategies are intentionally basic and can deadlock around the ball; a 0–0 match is possible. Fouls, penalties, substitutions, corner chamfers, tournament management and full referee-box compatibility are not implemented. The visual field is a readable lab rendering, not the black official surface.
+The user selected the PDF linked by the **official LARC 2026 organizer**. Its filename contains 2025, while its cover identifies Série A 2023; [the rules note](docs/RULES.md) records the exact provenance. This is the selected implementation reference, without a claim of 2026 homologation.
 
-Only built-in, trusted strategies run on the server. There are no code-upload, shell-execution, remote plugin or human teleoperation endpoints. An OS/container isolation boundary, resource limits and a reviewed protocol are required before supporting untrusted team programs. A browser bearer token is a single-operator lab model, not multi-user identity or production tournament authorization.
+Robot contacts use conservative circles around square bodies. Motor acceleration, friction and pushing thresholds are illustrative; there is no measured mass/torque/slip model. The two basic strategies can deadlock or finish 0–0. Synthetic camera projection is not real image detection or lens calibration. Restarts use deterministic referee placement, rather than demonstrating the physical autonomous-positioning challenge. Human advantage judgment, tipping/gripping, substitutions, early timeout termination, penalty shootouts and complete tournament management remain outside this implementation.
 
-No real camera pipeline, closed-loop speed control, encoder odometry, manufactured PCB, physical motor/radio testing or competition homologation is claimed. The electronics include a dimensioned design proposal and explicit component-selection gates, not fabrication-ready CAD. See [hardware](hardware/README.md), [protocol/API](docs/PROTOCOL.md), [architecture decisions](docs/adr/0001-server-batches.md), [rules reference](docs/RULES.md), [security](docs/SECURITY.md), and [verification/work log](docs/WORK_LOG.md).
+Only trusted, registered strategies run on the server. There are no arbitrary-code upload, shell or human teleoperation endpoints. A browser bearer token provides a single-operator lab model. Physical motor/radio validation, closed-loop speed/odometry, a manufactured PCB and competition inspection remain separate work.
+
+See [hardware](hardware/README.md), [protocol/API](docs/PROTOCOL.md), [architecture](docs/adr/0001-server-batches.md), [security](docs/SECURITY.md), and [verification/work log](docs/WORK_LOG.md). To exercise real HTTP persistence locally, run `node --env-file=apps/web/.env.local --import tsx tools/referee-smoke.ts` with the local server and database running.
 
 ## Credits and license
 
