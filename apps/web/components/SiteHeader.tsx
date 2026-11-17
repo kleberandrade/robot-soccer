@@ -84,7 +84,7 @@ function NavigationMenu({ active }: { active?: string }) {
 export default function SiteHeader({ active }: { active?: string }) {
   const { t } = useI18n();
   return (
-    <header className="site-header">
+    <header className="site-header site-container">
       <Link href="/" className="site-brand">
         <SiteLogo />
       </Link>

@@ -115,7 +115,7 @@ export default function Home() {
   return (
     <div className="public-site">
       <SiteHeader active="/" />
-      <main>
+      <main className="landing-main site-container">
         <section className="project-hero">
           <div className="hero-story">
             <span className="section-kicker">
@@ -148,33 +148,35 @@ export default function Home() {
               <T>{"Open source · VSSS 3 × 3 · Browser-based simulation"}</T>
             </div>
           </div>
-          <div className="hero-field">
-            <div className="hero-field-caption">
-              <span>
-                <T>{"THE PLAYING FIELD"}</T>
-              </span>
-              <span>
-                <T>{"01 / SIMULATION"}</T>
-              </span>
-            </div>
-            <FieldPreview />
-            <div className="field-spec-strip">
-              <span>
-                <strong>1.50 × 1.30</strong>
-                <T>{"meters"}</T>
-              </span>
-              <span>
-                <strong>
-                  <T>{"60 Hz"}</T>
-                </strong>
-                <T>{"fixed simulation step"}</T>
-              </span>
-              <span>
-                <strong>
-                  <T>{"Two views"}</T>
-                </strong>
-                <T>{"3D scene + camera"}</T>
-              </span>
+          <div className="hero-visual">
+            <div className="hero-field">
+              <div className="hero-field-caption">
+                <span>
+                  <T>{"THE PLAYING FIELD"}</T>
+                </span>
+                <span>
+                  <T>{"01 / SIMULATION"}</T>
+                </span>
+              </div>
+              <FieldPreview />
+              <div className="field-spec-strip">
+                <span>
+                  <strong>1.50 × 1.30</strong>
+                  <T>{"meters"}</T>
+                </span>
+                <span>
+                  <strong>
+                    <T>{"60 Hz"}</T>
+                  </strong>
+                  <T>{"fixed simulation step"}</T>
+                </span>
+                <span>
+                  <strong>
+                    <T>{"Two views"}</T>
+                  </strong>
+                  <T>{"3D scene + camera"}</T>
+                </span>
+              </div>
             </div>
           </div>
         </section>

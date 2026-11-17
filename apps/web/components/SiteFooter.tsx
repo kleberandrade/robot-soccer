@@ -4,7 +4,7 @@ import SiteLogo from "./SiteLogo";
 export default function SiteFooter() {
   const { t } = useI18n();
   return (
-    <footer className="site-footer" aria-label={t("Footer")}>
+    <footer className="site-footer site-container" aria-label={t("Footer")}>
       <div className="footer-invitation">
         <div>
           <span className="section-kicker">
