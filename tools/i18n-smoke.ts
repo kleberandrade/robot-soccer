@@ -39,7 +39,7 @@ for (const [locale, expected] of Object.entries(labels)) {
     assert.equal(new URL(response.url).pathname, `/${locale}${path}`);
     const html = await response.text();
     assert(
-      html.includes(`<html lang="${locale}"`),
+      (html.match(/<html\b[^>]*>/)?.[0] ?? "").includes(`lang="${locale}"`),
       `${locale}${path}: document language`,
     );
     assert(

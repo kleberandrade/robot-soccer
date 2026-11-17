@@ -624,5 +624,6 @@
   "Reserve <=8 diameter x 12 height": "Reservar diâmetro ≤8 × altura 12",
   ">=10 V low ESR; verify VM transients": "≥10 V e baixa ESR; conferir transientes em VM",
   ">=6.3 V; verify startup with selected regulator": "≥6,3 V; conferir inicialização com o regulador selecionado",
-  "Reserve <=12 x 5 x 6": "Reservar ≤12 × 5 × 6"
+  "Reserve <=12 x 5 x 6": "Reservar ≤12 × 5 × 6",
+  "Resources": "Conteúdo"
 }
