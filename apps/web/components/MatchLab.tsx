@@ -1,5 +1,6 @@
 "use client";
 import dynamic from "next/dynamic";
+import SiteHeader from "./SiteHeader";
 import CameraView, { fieldCovered } from "./CameraView";
 import RefereePanel from "./RefereePanel";
 import ViewSettings from "./ViewSettings";
@@ -14,42 +15,18 @@ export default function MatchLab() {
   const { shown, row, message, trail, trails, setTrails, camera, rig } = lab;
   return (
     <main className="shell">
-      <header className="topbar">
-        <a className="brand" href="/">
-          <span className="brand-icon">
-            R<span>·</span>S
-          </span>{" "}
-          ROBOT-SOCCER
-        </a>
-        <nav aria-label="Main navigation">
-          <a className="selected" href="#arena">
-            Match lab
-          </a>
-          <a href="/docs">Documentation ↗</a>
-          <a href="https://github.com/kleberandrade/robot-soccer/tree/master/hardware">
-            Hardware ↗
-          </a>
-        </nav>
-        <span className="edition">VSSS / 3 × 3</span>
-      </header>
-      <section className="intro">
+      <SiteHeader active="/lab" />
+      <section className="lab-heading">
         <div>
-          <p className="eyebrow">AUTONOMOUS ROBOTICS / OPEN LABORATORY</p>
-          <h1>
-            Small robots.
-            <br />
-            <span>Big match energy.</span>
-          </h1>
-          <p className="intro-copy">
-            Build a team. Test a strategy. Watch six autonomous robots find
-            their way to goal.
+          <p className="section-kicker">SIMULATION LABORATORY</p>
+          <h1>The match laboratory</h1>
+          <p>
+            Inspect the scene, test a strategy and manage the referee whistle.
           </p>
         </div>
-        <div className="intro-stat">
-          <strong>06</strong>
-          <span>ROBOTS ON THE FIELD</span>
-          <small>One ball. Two teams. No human driving.</small>
-        </div>
+        <a href="/compete" className="site-button outline">
+          Private competition
+        </a>
       </section>
       <section className="workspace" id="arena">
         <div className="match-column">
@@ -146,7 +123,7 @@ export default function MatchLab() {
             </div>
             <div className="viewbar">
               <span>
-                ↔ Drag to orbit <span className="muted">· Scroll to zoom</span>
+                Drag to orbit <span className="muted">· Scroll to zoom</span>
               </span>
               <div>
                 <button
@@ -179,7 +156,7 @@ export default function MatchLab() {
               Approximate contact physics. Competition rules and physical robots
               require separate validation.
             </p>
-            <a href="/docs">Read the scope & assumptions ↗</a>
+            <a href="/docs">Read the scope & assumptions </a>
           </section>
         </aside>
       </section>
@@ -187,7 +164,7 @@ export default function MatchLab() {
         <span>
           ROBOT-SOCCER <b> / </b> Built to experiment.
         </span>
-        <span>Origin: Fatec Americana · MIT · v0.2</span>
+        <span>Origin: Fatec Americana · MIT · v0.3</span>
       </footer>
     </main>
   );

@@ -10,12 +10,12 @@ const decisions: { kind: Decision["kind"]; label: string }[] = [
     kind: "attacking-overload",
     label: "Second attacker involved in goal area",
   },
-  { kind: "defensive-overload", label: "Second defender involved → penalty" },
+  { kind: "defensive-overload", label: "Second defender involved (penalty)" },
   { kind: "keeper-retention", label: "Keeper possession exceeds 10 s" },
   { kind: "goalkeeper-push", label: "Pushing keeper without the ball" },
   { kind: "goalkeeper-block", label: "Blocking the goalkeeper" },
   { kind: "false-start", label: "False start before the whistle" },
-  { kind: "free-ball", label: "Stalemate → neutral free ball" },
+  { kind: "free-ball", label: "Stalemate (neutral free ball)" },
 ];
 function decisionLocked(lab: Lab) {
   return (

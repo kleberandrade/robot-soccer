@@ -1,62 +1,78 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import SiteHeader from "../../components/SiteHeader";
+import SiteFooter from "../../components/SiteFooter";
 import { articles } from "./library";
 export const metadata: Metadata = {
-  title: "Learning library | ROBOT-SOCCER",
+  title: "Learning library | ROBOTSOCCER",
   description:
-    "Step-by-step articles and runnable examples for VSSS simulation, autonomous teams, differential drive, and camera geometry.",
+    "Didactic articles, code examples, setup, rules, hardware and remote competition guides.",
 };
-export default function Docs() {
+export default function Library() {
   return (
-    <main className="docs-shell">
-      <header className="docs-nav">
-        <Link href="/">← Match lab</Link>
-        <span>ROBOT-SOCCER / LEARNING LIBRARY</span>
-      </header>
-      <p className="eyebrow">LEARN BY RUNNING A MATCH</p>
-      <h1>
-        From two wheels
-        <br />
-        to a whole team.
-      </h1>
-      <p className="docs-lead">
-        Start with the first match, then explore one concept at a time. Each
-        article includes working commands, an explanation, and an experiment you
-        can repeat.
-      </p>
-      <div className="article-grid">
-        {articles.map((a) => (
-          <Link key={a.slug} href={`/docs/${a.slug}`} className="article-card">
-            <h2>{a.title}</h2>
-            <p>{a.summary}</p>
-            <span>Read article →</span>
-          </Link>
-        ))}
-      </div>
-      <section className="docs-note">
-        <h2>Know the reference</h2>
-        <p>
-          The selected reference is the VSSS Série A PDF linked by the official
-          LARC 2026 site. Its filename says 2025 and its cover says 2023. The
-          simulator names that source explicitly; it does not claim
-          certification or undisclosed 2026 amendments.
-        </p>
-        <a
-          href="https://mecatronica.umng.edu.co/index.html/larc.html"
-          target="_blank"
-          rel="noreferrer"
-        >
-          Official organizer and rulebook ↗
-        </a>
-        <p>
-          For electronics, licensing, setup and the full verification log, visit
-          the{" "}
-          <a href="https://github.com/kleberandrade/robot-soccer#readme">
-            project repository ↗
-          </a>
-          .
-        </p>
-      </section>
-    </main>
+    <div className="public-site">
+      <SiteHeader active="/docs" />
+      <main className="learning-library">
+        <header>
+          <span className="section-kicker">THE LEARNING LIBRARY</span>
+          <h1>
+            Understand every
+            <br />
+            part of the game.
+          </h1>
+          <p>
+            Start with a match. Follow the mechanics. Then build something of
+            your own.
+          </p>
+        </header>
+        <section>
+          <div className="library-section-label">
+            <span>01</span>
+            <h2>Learn by experimenting</h2>
+          </div>
+          <div className="learning-cards">
+            {articles.slice(0, 4).map((a, i) => (
+              <Link key={a.slug} href={"/docs/" + a.slug}>
+                <span className="lesson-number">
+                  LESSON {String(i + 1).padStart(2, "0")}
+                </span>
+                <h3>{a.title.replace(/^\d+\. /, "")}</h3>
+                <p>{a.summary}</p>
+                <span className="reading-label">Read the article</span>
+              </Link>
+            ))}
+          </div>
+        </section>
+        <section>
+          <div className="library-section-label">
+            <span>02</span>
+            <h2>Project reference</h2>
+          </div>
+          <div className="reference-links">
+            {articles.slice(4).map((a) => (
+              <Link key={a.slug} href={"/docs/" + a.slug}>
+                <h3>{a.title}</h3>
+                <p>{a.summary}</p>
+              </Link>
+            ))}
+            <Link href="/rules">
+              <h3>VSSS rules and scope</h3>
+              <p>
+                Source provenance, reference dimensions and modeled referee
+                behavior.
+              </p>
+            </Link>
+            <Link href="/hardware">
+              <h3>Hardware reference</h3>
+              <p>
+                Robot dimensions, wiring diagram, component list, pin map and
+                firmware.
+              </p>
+            </Link>
+          </div>
+        </section>
+      </main>
+      <SiteFooter />
+    </div>
   );
 }

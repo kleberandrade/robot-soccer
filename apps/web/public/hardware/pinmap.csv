@@ -1,0 +1,13 @@
+ESP32_C3_GPIO,TB6612FNG_signal,function,initial_state
+0,AIN1,Left direction,LOW
+1,AIN2,Left direction,LOW
+3,PWMA,Left 20 kHz 8-bit PWM,0 duty
+4,BIN1,Right direction,LOW
+5,BIN2,Right direction,LOW
+6,PWMB,Right 20 kHz 8-bit PWM,0 duty
+7,STBY,Drive enable with external 10k pulldown,LOW
+3V3,VCC,Driver logic supply,Regulated 3.3 V
+GND,GND and PGND,Common star ground,All grounds joined
+none,VM,Motor power from REG1,Regulated 5 V only
+none,AO1 AO2,Left motor M1,Never connect to MCU GPIO
+none,BO1 BO2,Right motor M2,Never connect to MCU GPIO

@@ -1,6 +1,6 @@
 {
   "name": "robot-soccer",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "private": true,
   "engines": {
     "node": ">=22"
@@ -16,7 +16,10 @@
     "bridge": "npm run bridge --workspace=@robot-soccer/bridge --",
     "test:firmware": "c++ -std=c++17 tests/firmware.cpp -o /tmp/robot-soccer-firmware-test && /tmp/robot-soccer-firmware-test",
     "test:smoke": "node --import tsx tools/smoke.ts",
-    "test:referee-smoke": "node --import tsx tools/referee-smoke.ts"
+    "test:referee-smoke": "node --import tsx tools/referee-smoke.ts",
+    "test:rooms-smoke": "node --import tsx tools/rooms-smoke.ts",
+    "test:remote-clients": "node --import tsx tools/remote-clients-smoke.ts",
+    "test:site-smoke": "node --import tsx tools/site-smoke.ts"
   },
   "devDependencies": {
     "@playwright/test": "^1.65.1",

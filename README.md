@@ -9,7 +9,7 @@
 
 An autonomous 3×3 Very Small Size Soccer laboratory: deterministic simulation, a real 3D Next.js viewer, bounded server execution, PostgreSQL checkpoints, two example strategies, and an ESP32 radio/drive reference. This is an experimental platform, not a certified competition system.
 
-[Open the live laboratory](https://robot-soccer.vercel.app) · [Read the learning articles](https://robot-soccer.vercel.app/docs)
+[Explore the project](https://robot-soccer.vercel.app) · [Open the laboratory](https://robot-soccer.vercel.app/lab) · [Read the learning articles](https://robot-soccer.vercel.app/docs)
 
 ![Synchronized 3D and overhead camera laboratory](docs/assets/match-lab-v2.jpg)
 
@@ -20,7 +20,7 @@ Use Node.js 22 or newer and npm (the exact package-manager version is recorded i
 ```sh
 npm ci
 npm run dev
-# http://127.0.0.1:3107 — usable local preview without credentials
+# http://127.0.0.1:3107 — project portal; /lab is the local simulation
 npm test
 npm run typecheck
 npm run build
@@ -29,6 +29,12 @@ npm run test:firmware
 ```
 
 The root commands use **Turborepo** to schedule workspace tasks. `apps/web` is the Next.js App Router application; `apps/simulator` is the reproducible terminal runner; `apps/bridge` is the team computer's UDP adapter. Shared packages are `packages/engine`, `packages/protocol`, and `packages/database`. `firmware` and `hardware` hold the embedded build and electrical/mechanical reference. There is one npm lockfile.
+
+## Website and private competitions
+
+The presentation page introduces the project; the simulator lives at [/lab](https://robot-soccer.vercel.app/lab). The website includes the [learning library](https://robot-soccer.vercel.app/docs), [rules reference](https://robot-soccer.vercel.app/rules) and [hardware guide](https://robot-soccer.vercel.app/hardware), including wiring, component tables and pin map.
+
+Use [/compete](https://robot-soccer.vercel.app/compete) for private remote competitions. An operator creates a room, and each participant claims a separate team invitation and downloads their private connection. Their own code runs locally and sends bounded wheel commands; the server advances after both teams contribute to the same turn. See [the complete remote guide](docs/REMOTE_COMPETITION.md) and `examples/remote-team.ts` for Koativa/Circuit clients. Room creation uses the existing operator token; team and spectator access never grants that token. Rooms expire after 24 hours.
 
 ## Persistent server matches
 

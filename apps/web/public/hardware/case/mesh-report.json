@@ -1,0 +1,96 @@
+{
+  "units": "mm",
+  "status": "unbuilt concept; no fit, load, thermal or print validation",
+  "batteryTrayIntersectionMm3": 0,
+  "batteryDeckIntersectionMm3": 0,
+  "nominalMotorAndWheelClearance": true,
+  "wheelEnvelopeWidthMm": 72,
+  "shellFootprintMm": [
+    70,
+    70
+  ],
+  "assemblyOffsets": {
+    "tray": [
+      0,
+      0,
+      4
+    ],
+    "lid": [
+      0,
+      0,
+      63
+    ],
+    "electronics-deck": [
+      0,
+      0,
+      30
+    ],
+    "skid": [
+      0,
+      0,
+      0
+    ]
+  },
+  "parts": [
+    {
+      "file": "tray.stl",
+      "vertices": 1721,
+      "triangles": 3466,
+      "volumeMm3": 41284.12,
+      "boundsMm": [
+        -35.0,
+        -35.0,
+        0.0,
+        35.0,
+        35.0,
+        59.0
+      ],
+      "closedEdges": true
+    },
+    {
+      "file": "lid.stl",
+      "vertices": 680,
+      "triangles": 1372,
+      "volumeMm3": 9722.16,
+      "boundsMm": [
+        -35.0,
+        -35.0,
+        0.0,
+        35.0,
+        35.0,
+        2.0
+      ],
+      "closedEdges": true
+    },
+    {
+      "file": "electronics-deck.stl",
+      "vertices": 1288,
+      "triangles": 2612,
+      "volumeMm3": 5768.29,
+      "boundsMm": [
+        -32.9,
+        -32.9,
+        0.0,
+        32.9,
+        32.9,
+        5.6
+      ],
+      "closedEdges": true
+    },
+    {
+      "file": "skid.stl",
+      "vertices": 96,
+      "triangles": 188,
+      "volumeMm3": 153.5,
+      "boundsMm": [
+        -3.5,
+        -3.5,
+        0.0,
+        3.5,
+        3.5,
+        4.0
+      ],
+      "closedEdges": true
+    }
+  ]
+}

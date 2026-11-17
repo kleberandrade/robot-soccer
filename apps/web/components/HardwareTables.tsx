@@ -1,0 +1,79 @@
+import { readFile } from "node:fs/promises";
+import path from "node:path";
+async function rows(file: "bom.csv" | "pinmap.csv") {
+  const text = await readFile(
+    path.resolve(process.cwd(), "../../hardware", file),
+    "utf8",
+  );
+  return text
+    .trim()
+    .split(/\r?\n/)
+    .slice(1)
+    .map((line) => line.split(","));
+}
+function Table({
+  headers,
+  records,
+}: {
+  headers: string[];
+  records: string[][];
+}) {
+  return (
+    <div className="hardware-table-scroll">
+      <table>
+        <thead>
+          <tr>
+            {headers.map((h) => (
+              <th key={h}>{h}</th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {records.map((cells, i) => (
+            <tr key={i}>
+              {cells.map((cell, j) => (
+                <td key={j}>{cell}</td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+export default async function HardwareTables() {
+  const [bom, pins] = await Promise.all([rows("bom.csv"), rows("pinmap.csv")]);
+  return (
+    <section className="hardware-tables">
+      <h2>Components and dimension budget</h2>
+      <p>
+        The reference list distinguishes selected component families from parts
+        still requiring sourcing and physical validation.
+      </p>
+      <Table
+        headers={[
+          "Reference",
+          "Qty",
+          "Component / requirement",
+          "Dimensions (mm)",
+          "Power / limit",
+          "Status",
+        ]}
+        records={bom}
+      />
+      <h2>GPIO and wiring reference</h2>
+      <p>
+        These are chip GPIO numbers. Driver standby remains low during reset.
+      </p>
+      <Table
+        headers={[
+          "ESP32-C3 GPIO",
+          "Driver signal",
+          "Function",
+          "Initial state",
+        ]}
+        records={pins}
+      />
+    </section>
+  );
+}

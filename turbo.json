@@ -44,6 +44,13 @@
   "globalDependencies": [
     "tsconfig.base.json",
     "vitest.config.ts",
-    "docs/articles/**/*.md"
+    "docs/**/*.md",
+    "hardware/**",
+    "README.md",
+    "firmware/src/main.cpp",
+    "firmware/include/protocol.h",
+    "firmware/include/secrets.example.h",
+    "firmware/platformio.ini",
+    "tools/sync-hardware.ts"
   ]
 }

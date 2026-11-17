@@ -3,8 +3,8 @@ import path from "node:path";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
+import MarkdownContent from "../../../components/MarkdownContent";
+import DocumentLayout from "../../../components/DocumentLayout";
 import { articles } from "../library";
 export const dynamicParams = false;
 export function generateStaticParams() {
@@ -30,28 +30,30 @@ export default async function Article({
   const { slug } = await params,
     article = articles.find((a) => a.slug === slug);
   if (!article) notFound();
-  const markdown = await readFile(
-    path.resolve(process.cwd(), "../../docs/articles", `${article.slug}.md`),
-    "utf8",
-  );
+  const markdown = article.source
+    ? await article.source()
+    : await readFile(
+        path.resolve(
+          process.cwd(),
+          "../../docs/articles",
+          `${article.slug}.md`,
+        ),
+        "utf8",
+      );
   return (
-    <main className="docs-shell">
-      <header className="docs-nav">
-        <Link href="/docs">← Learning library</Link>
-        <Link href="/">Open match lab ↗</Link>
-      </header>
+    <DocumentLayout>
       <article className="article-body">
-        <ReactMarkdown remarkPlugins={[remarkGfm]}>{markdown}</ReactMarkdown>
+        <MarkdownContent>{markdown}</MarkdownContent>
       </article>
       <nav className="article-next" aria-label="Other articles">
         {articles
           .filter((a) => a.slug !== slug)
           .map((a) => (
             <Link key={a.slug} href={`/docs/${a.slug}`}>
-              {a.title} →
+              {a.title}
             </Link>
           ))}
       </nav>
-    </main>
+    </DocumentLayout>
   );
 }

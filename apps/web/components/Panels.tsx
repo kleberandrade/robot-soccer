@@ -173,7 +173,7 @@ export function Configuration({ lab }: { lab: Lab }) {
           target="_blank"
           rel="noreferrer"
         >
-          Open replay chunks ↗
+          Open replay chunks
         </a>
       ) : null}
     </details>
@@ -253,14 +253,14 @@ function refereeButtons(shown: Match, locked: boolean) {
     [
       active ? "pause" : "start",
       active
-        ? "Ⅱ Pause"
+        ? "Pause"
         : shown.phase === "stoppage"
-          ? "▶ Whistle / resume"
-          : "▶ Start match",
+          ? "Whistle / resume"
+          : "Start match",
       locked ||
         !["ready", "paused", "running", "stoppage"].includes(shown.phase),
     ],
-    ["reset", "↺ Reset", locked],
+    ["reset", "Reset", locked],
     [
       "timeout-blue",
       "Blue timeout",

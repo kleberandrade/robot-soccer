@@ -16,7 +16,7 @@ In the match lab:
 
 1. Start a local preview. No database or token is needed for this experiment.
 2. Open **Make a referee decision**.
-3. Choose **Second defender involved → penalty**, with **Yellow** as the offending team.
+3. Choose **Second defender involved (penalty)**, with **Yellow** as the offending team.
 4. Apply the decision. The clock and motors stop. Blue receives the penalty.
 5. Inspect the setup in both views. On the default field, the mark is 0.375 m from center. The other four robots are across midfield; the defending keeper's side touches the goal line.
 6. Press **Whistle / resume**. The robots act autonomously again. The penalty is not an automatic goal or a prerecorded shot.

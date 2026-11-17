@@ -45,6 +45,9 @@ jobs:
           done
           npm run test:smoke
           npm run test:referee-smoke
+          npm run test:rooms-smoke
+          npm run test:remote-clients
+          npm run test:site-smoke
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -61,3 +64,16 @@ jobs:
           python-version: "3.12"
       - run: pip install platformio==6.2.0
       - run: pio run -d firmware
+
+  hardware:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python hardware/scripts/verify-artifacts.py
+      - run: pip install -r hardware/case/requirements.txt
+      - run: python hardware/case/generate.py
+      - run: python hardware/scripts/generate-diagrams.py
+      - run: python hardware/scripts/verify-artifacts.py

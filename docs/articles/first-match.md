@@ -11,7 +11,7 @@ npm ci
 npm run dev
 ```
 
-Open [the local match lab](http://127.0.0.1:3107). You should see the 3D field and the overhead camera projection **at the same time**. The labels distinguish local preview from a server match saved in Neon.
+Open [the local match lab](http://127.0.0.1:3107/lab). You should see the 3D field and the overhead camera projection **at the same time**. The labels distinguish local preview from a server match saved in Neon.
 
 Press **Start match**. Six autonomous robots begin moving. You can orbit and zoom the 3D scene, change camera height/tilt, and inspect the wheel spokes. These viewing controls do not drive a robot. When a foul stops play, read the restart announcement and press **Whistle / resume**.
 
