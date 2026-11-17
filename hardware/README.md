@@ -4,7 +4,7 @@ This is an original wiring/mechanical proposal for a differential-drive robot. N
 
 ## Envelope and packaging budget
 
-Target **70 × 70 × 65 mm bare**, leaving 5 mm total margin relative to the user's 75 mm cube. A removable thin uniform must stay inside 80 mm. Two transverse, back-to-back micro gearmotors (approximately 26 × 12 × 10 mm bodies) occupy about 52 mm across the chassis; two 7 mm wide wheels bring the nominal width to 66 mm. Verify shaft/hub engagement and actual motor length before cutting the chassis. Wheel diameter is 32 mm and the provisional track is 65 mm. The simulator renders 75 mm bodies and uses a conservative 53 mm contact radius; it does not duplicate this chassis exactly.
+The parametric case has a **70 × 70 mm shell footprint** and a nominal 65 mm assembly height. With a 65 mm wheel track and 7 mm tire width, the tire envelope is **72 mm**. This corrects the earlier oversimplified 66 mm width estimate: the complete robot, including hubs and shaft ends, still needs measurement against the 75 mm bare envelope. A thin uniform must stay inside 80 mm. Nominal 26 × 12 × 10 mm motor bodies have a proposed 4 mm back-to-back clearance; verify terminal bends and shaft/hub engagement using the actual selected parts. Wheel diameter is 32 mm. The default simulation uses a 75 mm box and 6 mm tires; this mechanical proposal is a separate, unbuilt design budget.
 
 Allocate a lower motor deck, a protected battery bay of **at most 45 × 25 × 18 mm**, and an upper **45 × 40 mm custom carrier** with the ESP32-C3-MINI-1 antenna facing a non-metallic edge. A 10 mm wiring/connector allowance and antenna keepout are required. This is a stacking budget, not a validated CAD assembly. A full development board is a bench substitute; use the MINI-1 module/carrier for the size proposal.
 
@@ -39,3 +39,15 @@ A valid authenticated packet enables the driver. A command deadline of at most 2
 - [Toshiba TB6612FNG product/datasheet](https://toshiba.semicon-storage.com/eu/semiconductor/product/general-purpose-logic-ics/detail.TB6612FNG.html). Dual brushed-motor full bridge; VCC operating 2.7–5.5 V and VM 2.5–13.5 V support the proposed 3.3/5 V rails.
 - [Pololu low-power 6 V motors](https://www.pololu.com/category/171/6v-low-power-lp-micro-metal-gearmotors) and [motor data](https://www.pololu.com/file/0J1487/pololu-micro-metal-gearmotors-rev-4-1.pdf). Choose gearing based on measured speed/torque, not simulation speed.
 - [5 V D24V10F5 regulator](https://www.pololu.com/product/2831/specs) and [3.3 V D24V10F3 regulator](https://www.pololu.com/product/2830/resources). Approximately 12.7 × 17.8 × 3.56 mm each, excluding headers; verify dropout and thermal derating at battery minimum.
+
+## Detailed electronic drawing
+
+See [the connection-level schematic](electronics.svg) and [connection schedule](connections.csv). Module pads and driver pins were checked against current primary Espressif/Toshiba references. Functional power-protection blocks remain selection gates. This original drawing includes split regulated rails, local decoupling, all duplicated driver output/power pins, external STBY pulldown, EN delay/reset, boot straps and a manual 3.3 V UART header. It does not replace schematic capture, PCB layout, ERC, thermal/transient measurements or physical validation.
+
+## Parametric case
+
+The [case source and notes](case/README.md), [dimensions](case/dimensions.json), [drawing](case/dimensions.svg) and four STL files define the Rev A concept. The website loads the generated STL parts directly, with exploded and see-through views. Closed-mesh and nominal keepout checks are software geometry checks only.
+
+## Robot code on the website
+
+The complete ESP32 `main.cpp`, bounded `protocol.h`, pinned `platformio.ini` and empty `secrets.example.h` are displayed at `/hardware/firmware` and downloadable individually. Only the example template is published; real `secrets.h` remains ignored. Competition-room keys do not authenticate physical robot radio packets.

@@ -10,9 +10,14 @@ PROT1,1,2S per-cell protection plus 6.4 V cutoff/hysteresis,Reserve <=25 x 15 x 
 SW1,1,Accessible mechanical supply switch,Reserve <=10 x 6 x 6,>=1 A DC at 8.4 V,Selection requirement
 F1,1,1 A supply fuse with suitable time-current curve,Reserve <=10 x 5 x 5,Verify inrush versus wire and battery protection,Selection requirement
 D1,1,Reverse-polarity Schottky or qualified ideal-diode circuit,Reserve <=8 x 6 x 3,>=2 A / >=20 V; account for dropout,Selection requirement
-C1 C2 C3,3,100 nF ceramic driver/rail bypass,0603/0805,>=16 V,Original wiring proposal
-C4,1,470 uF motor-rail bulk capacitor,Reserve <=8 diameter x 12 height,>=10 V low ESR,Selection requirement
-C5 C6,2,100 nF ceramic directly across motor terminals,0603/0805,>=16 V,Original EMI proposal
 R1,1,10 kohm STBY pulldown,0603/0805,Driver disabled during MCU reset,Required external component
 PCB1,1,Custom module and driver carrier,45 x 40 target,RF keepout and power thermal routing required,Not laid out or fabricated
-CHASSIS1,1,Nonconductive chassis and removable tag,70 x 70 x 65 target bare,Validate complete assembly <=75 mm cube,Dimension budget only
+CHASSIS1,1,Parametric Rev A tray lid deck and skids,70 x 70 shell; 72 tire span; 65 nominal height,Validate complete assembly <=75 mm cube,STL geometry checked; unbuilt and unprinted
+C1 C3 C5,3,10 uF local rail decoupling,0603/0805 or suitable footprint,Voltage rating and DC-bias derating to verify,Diagram Rev B; place close to module/driver
+C2 C4 C6,3,100 nF local high-frequency bypass,0603/0805,>=16 V proposed,Diagram Rev B; place close to module/driver
+CBULK,1,470 uF motor-rail bulk capacitor,Reserve <=8 diameter x 12 height,>=10 V low ESR; verify VM transients,Selection requirement
+C7 C8,2,100 nF directly across motor terminals,0603/0805,>=16 V proposed,Original EMI proposal
+C9,1,1 uF EN startup delay capacitor,0603/0805,>=6.3 V; verify startup with selected regulator,Espressif reference recommendation
+R2 R3 R4 R5,4,10 kohm EN and boot-strap pullups,0603/0805,3.3 V logic,Diagram Rev B
+SW2 SW3,2,Momentary reset and boot buttons,Package to select,Logic only; motor rail off for programming,Selection requirement
+J4,1,Six-pin 3.3 V UART service header,Reserve <=12 x 5 x 6,VREF sense only; no programmer backfeed,Selection requirement

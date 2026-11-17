@@ -16,3 +16,5 @@ firmware/include/secrets.h
 .turbo/
 
 .research/
+
+.cad-venv/
