@@ -65,3 +65,11 @@ Select the real competition/edition and reconcile its rules; implement full refe
 - Browser checks exercised actual 3D rendering, a manual penalty and whistle, matching viewport frame numbers, camera height/tilt/frustum, pause and a 390-pixel mobile layout without horizontal document overflow. Saved the local synchronized-view screenshot in `docs/assets/match-lab-v2.jpg`.
 
 Publication and final CI verification are recorded below after the deployment is observed.
+
+### Observed v0.2 publication
+
+- Pushed `00a3415` (engine/referee/drive/views) and `2e494eb` (didactic documentation) normally to `master`. [GitHub Actions run 44014782886](https://github.com/kleberandrade/robot-soccer/actions/runs/44014782886) completed **software and firmware successfully**, including all 67 Vitest cases with real PostgreSQL, both HTTP smoke flows, the full match and the production build. Vercel reported success for `2e494eb`.
+- Public health returned engine 2 with persistence/operator configuration enabled. The production referee smoke created match `7f02e281-a212-4a5d-b2bf-7084162a30dd`, persisted a penalty, confirmed 401 without authentication, held the pre-whistle clock, advanced 12 playing ticks with wheel rotation, verified four replay chunks and paused the checkpoint at revision 5.
+- All four public article routes and three original SVG illustrations returned HTTP 200. The camera/drive article rendered correctly on a 390-pixel mobile viewport with its image loaded and no horizontal document overflow. The legacy demonstration checkpoint read successfully through the v1→v2 compatibility path without an explicit data migration.
+- Loaded the new saved match through the public browser as a spectator; the 3D and synthetic camera views showed the same frame 12, Yellow's foul and the recorded whistle. No operator token was entered in that tab. Replaced `docs/assets/match-lab-v2.jpg` with this public production screenshot and left the simulator and learning article open.
+- Physical dynamics/calibration and full tournament procedures remain the explicit limitations in the rules note. Mutation testing is reported above without a full-coverage claim.
