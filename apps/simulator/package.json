@@ -1,0 +1,13 @@
+{
+  "name": "@robot-soccer/simulator",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "simulate": "node --import tsx src/main.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@robot-soccer/engine": "*"
+  }
+}

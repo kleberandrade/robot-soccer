@@ -1,0 +1,9 @@
+node_modules
+.next
+.pio
+.pio-core
+.tools-venv
+coverage
+target
+.turbo
+package-lock.json

@@ -1,0 +1,20 @@
+{
+  "name": "@robot-soccer/database",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "vitest run --config ../../vitest.config.ts",
+    "coverage": "vitest run --config ../../vitest.config.ts --coverage",
+    "typecheck": "tsc --noEmit",
+    "migrate": "node --import tsx scripts/migrate.ts"
+  },
+  "dependencies": {
+    "@neondatabase/serverless": "^1.2.1",
+    "pg": "^8.23.1",
+    "@robot-soccer/engine": "*"
+  },
+  "exports": {
+    ".": "./src/index.ts"
+  }
+}

@@ -6,26 +6,16 @@
     "node": ">=22"
   },
   "scripts": {
-    "dev": "next dev --hostname 127.0.0.1",
-    "build": "next build",
-    "start": "next start --hostname 127.0.0.1",
-    "typecheck": "tsc --noEmit",
-    "test": "vitest run",
-    "coverage": "vitest run --coverage",
-    "simulate": "node --import tsx scripts/simulate.ts",
-    "db:migrate": "node --import tsx scripts/database.ts",
-    "bridge": "node --import tsx scripts/bridge.ts"
-  },
-  "dependencies": {
-    "@neondatabase/serverless": "^1.2.1",
-    "@react-three/drei": "^10.7.9",
-    "@react-three/fiber": "^9.8.2",
-    "next": "^16.4.6",
-    "pg": "^8.23.1",
-    "react": "^19.3.1",
-    "react-dom": "^19.3.1",
-    "three": "^0.187.0",
-    "zod": "^4.6.7"
+    "dev": "turbo run dev --filter=@robot-soccer/web",
+    "build": "turbo run build",
+    "test": "turbo run test",
+    "coverage": "turbo run coverage",
+    "typecheck": "turbo run typecheck",
+    "simulate": "npm run simulate --workspace=@robot-soccer/simulator",
+    "db:migrate": "npm run migrate --workspace=@robot-soccer/database",
+    "bridge": "npm run bridge --workspace=@robot-soccer/bridge",
+    "test:firmware": "c++ -std=c++17 tests/firmware.cpp -o /tmp/robot-soccer-firmware-test && /tmp/robot-soccer-firmware-test",
+    "test:smoke": "node --import tsx tools/smoke.ts"
   },
   "devDependencies": {
     "@playwright/test": "^1.65.1",
@@ -35,9 +25,16 @@
     "@types/react-dom": "^19.3.0",
     "@types/three": "^0.187.0",
     "@vitest/coverage-v8": "^5.1.0",
+    "prettier": "^3.10.1",
     "tsx": "^4.23.15",
+    "turbo": "^2.11.11",
     "typescript": "^7.0.2",
     "vitest": "^5.1.0"
   },
-  "type": "module"
+  "type": "module",
+  "packageManager": "npm@11.20.0",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ]
 }
