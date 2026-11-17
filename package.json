@@ -20,7 +20,8 @@
     "test:rooms-smoke": "node --import tsx tools/rooms-smoke.ts",
     "test:remote-clients": "node --import tsx tools/remote-clients-smoke.ts",
     "test:site-smoke": "node --import tsx tools/site-smoke.ts",
-    "test:i18n-smoke": "node --import tsx tools/i18n-smoke.ts"
+    "test:i18n-smoke": "node --import tsx tools/i18n-smoke.ts",
+    "test:translations": "python3 tools/audit-translations.py"
   },
   "devDependencies": {
     "@playwright/test": "^1.65.1",

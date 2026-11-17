@@ -4299,3 +4299,88 @@ h1 {
     transform: translateY(-6px);
   }
 }
+/* Consistent card rhythm: internal padding is independent from grid gaps. */
+:root {
+  --card-padding: clamp(22px, 2.5vw, 32px);
+  --card-gap: clamp(18px, 2vw, 24px);
+  --section-space: clamp(44px, 6vw, 72px);
+}
+.learning-library.site-container {
+  width: min(
+    var(--site-max-width),
+    calc(100% - var(--site-gutter) - var(--site-gutter))
+  );
+  max-width: var(--site-max-width);
+  margin: var(--section-space) auto;
+}
+.learning-library > section {
+  margin-top: var(--section-space);
+}
+.library-section-label {
+  padding-top: 28px;
+  margin-bottom: 24px;
+  gap: 18px;
+}
+.library-section-label h2 {
+  margin: 0;
+  line-height: 1.4;
+}
+.learning-cards,
+.reference-links {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--card-gap);
+}
+.learning-cards > a,
+.reference-links > a {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 14px;
+  padding: var(--card-padding);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: linear-gradient(135deg, #192a33, #121e28);
+  overflow-wrap: break-word;
+}
+.learning-cards > a h3,
+.reference-links > a h3 {
+  margin: 0;
+  line-height: 1.45;
+  max-width: 100%;
+}
+.learning-cards > a p,
+.reference-links > a p {
+  margin: 0;
+  line-height: 1.85;
+}
+.learning-cards > a .lesson-number {
+  margin-bottom: 4px;
+}
+.learning-cards > a .reading-label {
+  margin-top: auto;
+  padding-top: 14px;
+}
+.reference-links > a {
+  min-height: 150px;
+  justify-content: center;
+}
+.hardware-explore-links {
+  gap: var(--card-gap);
+}
+.hardware-explore-links > a {
+  padding: var(--card-padding);
+}
+@media (max-width: 700px) {
+  .learning-cards,
+  .reference-links {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .learning-library > header h1 {
+    font-size: clamp(36px, 8vw, 52px);
+  }
+  .reference-links > a {
+    min-height: 0;
+  }
+}

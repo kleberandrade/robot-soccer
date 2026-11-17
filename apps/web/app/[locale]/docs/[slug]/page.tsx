@@ -32,6 +32,7 @@ export default async function Article({
 }: {
   params: Promise<{ slug: string }>;
 }) {
+  const t = await getTranslator();
   const { slug } = await params,
     article = articles.find((a) => a.slug === slug);
   if (!article) notFound();
@@ -52,7 +53,7 @@ export default async function Article({
           {await localizeDocument(slug, markdown)}
         </MarkdownContent>
       </article>
-      <nav className="article-next" aria-label="Other articles">
+      <nav className="article-next" aria-label={t("Other articles")}>
         {articles
           .filter((a) => a.slug !== slug)
           .map((a) => (

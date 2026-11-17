@@ -1,4 +1,5 @@
 "use client";
+import { T } from "../i18n/client";
 
 import { Suspense } from "react";
 import { Canvas, useLoader } from "@react-three/fiber";
@@ -102,7 +103,7 @@ export default function CaseScene({
       dpr={[1, 1.5]}
       fallback={
         <p className="case-fallback">
-          3D unavailable. Open the dimension drawing or STL files below.
+          <T>3D unavailable. Open the dimension drawing or STL files below.</T>
         </p>
       }
     >

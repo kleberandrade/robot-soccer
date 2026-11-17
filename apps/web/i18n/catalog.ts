@@ -8,7 +8,19 @@ const catalogs: Record<Locale, Record<string, string>> = {
   es,
 };
 export function translate(locale: Locale, text: string) {
-  return catalogs[locale][text] ?? text;
+  const known = catalogs[locale][text];
+  if (known) return known;
+  if (
+    locale !== "en" &&
+    /^(?:signal timed out|This operation was aborted\.|The operation was aborted\.)$/.test(
+      text,
+    )
+  )
+    return catalogs[locale]["Request timed out."];
+  const connected = text.match(/^Server match connected · ([a-f0-9-]+)$/);
+  if (connected)
+    return `${catalogs[locale]["Server match connected"] ?? "Server match connected"} · ${connected[1]}`;
+  return text;
 }
 
 export function formatText(locale: Locale, text: string | number) {
@@ -22,4 +34,14 @@ export function formatText(locale: Locale, text: string | number) {
     }).format(Number(text));
   }
   return translate(locale, text);
+}
+
+export function message(
+  locale: Locale,
+  key: string,
+  values: Record<string, string | number>,
+) {
+  return translate(locale, key).replace(/\{(\w+)\}/g, (token, name) =>
+    String(values[name] ?? token),
+  );
 }

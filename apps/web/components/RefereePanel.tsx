@@ -1,6 +1,7 @@
 "use client";
+import { eventLabel, eventMessage, restartLabel } from "../i18n/events";
 
-import { T } from "../i18n/client";
+import { T, useI18n } from "../i18n/client";
 
 import { useState } from "react";
 import { type Decision, type Team } from "@robot-soccer/engine";
@@ -28,6 +29,7 @@ function decisionLocked(lab: Lab) {
   );
 }
 export default function RefereePanel({ lab }: { lab: Lab }) {
+  const { t, locale } = useI18n();
   const [kind, setKind] = useState<Decision["kind"]>("personal-foul"),
     [team, setTeam] = useState<Team>("blue"),
     [index, setIndex] = useState("0");
@@ -80,7 +82,7 @@ export default function RefereePanel({ lab }: { lab: Lab }) {
       {shown.restart?.stage === "setup" ? (
         <p className="restart-call">
           <strong>
-            <T>{shown.restart.kind.replaceAll("-", " ").toUpperCase()}</T>
+            {restartLabel(locale, shown.restart.kind).toLocaleUpperCase(locale)}
           </strong>
           <span>
             <T>{shown.restart.team ?? "Neutral ball"}</T>
@@ -88,7 +90,7 @@ export default function RefereePanel({ lab }: { lab: Lab }) {
           </span>
         </p>
       ) : null}
-      <ol className="event-list" aria-label="Recent referee events">
+      <ol className="event-list" aria-label={t("Recent referee events")}>
         {shown.officials.events
           .slice(-5)
           .reverse()
@@ -98,12 +100,8 @@ export default function RefereePanel({ lab }: { lab: Lab }) {
                 <T>{time(e.matchTick)}</T>
               </time>
               <div>
-                <strong>
-                  <T>{e.kind.replaceAll("-", " ")}</T>
-                </strong>
-                <small>
-                  <T>{e.message}</T>
-                </small>
+                <strong>{eventLabel(locale, e.kind)}</strong>
+                <small>{eventMessage(locale, e)}</small>
               </div>
             </li>
           ))}

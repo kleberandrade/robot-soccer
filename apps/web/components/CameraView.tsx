@@ -1,3 +1,5 @@
+"use client";
+import { useI18n } from "../i18n/client";
 import { BALL_RADIUS, isActive, type Match } from "@robot-soccer/engine";
 import { projectPoint, type CameraConfig } from "@robot-soccer/engine/camera";
 import {
@@ -27,6 +29,7 @@ export default function CameraView({
   state: Match;
   camera: CameraConfig;
 }) {
+  const { t, locale } = useI18n();
   const c = state.config,
     ball = projectPoint({ ...state.ball, z: BALL_RADIUS }, camera),
     radius = ball
@@ -45,7 +48,7 @@ export default function CameraView({
       viewBox="0 0 800 600"
       className="camera-frame"
       role="img"
-      aria-label={`Synthetic camera view, frame ${state.tick}, height ${camera.height} meters`}
+      aria-label={`${t("Synthetic camera view")}, ${t("Frame")} ${state.tick}, ${t("Height")} ${new Intl.NumberFormat(locale).format(camera.height)} ${t("meters")}`}
       data-testid="camera-view"
       data-tick={state.tick}
     >
@@ -86,7 +89,7 @@ export default function CameraView({
         ))}
         {robots.map((r) => (
           <g key={r.id}>
-            <title>{`${r.id} · ${r.role}`}</title>
+            <title>{`${r.id} · ${t(r.role)}`}</title>
             <polygon
               points={polygon(robotCorners(r, c), c.robotHeight, camera)}
               fill="#030405"

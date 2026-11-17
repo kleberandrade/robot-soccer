@@ -1,6 +1,6 @@
 "use client";
 
-import { T } from "../i18n/client";
+import { T, useI18n } from "../i18n/client";
 
 import {
   CONFIG,
@@ -20,6 +20,7 @@ export const time = (ticks: number) =>
       "0",
     )}:${(Math.floor(ticks / 60) % 60).toString().padStart(2, "0")}`;
 export function Configuration({ lab }: { lab: Lab }) {
+  const { t } = useI18n();
   const {
     config,
     setConfig,
@@ -162,7 +163,7 @@ export function Configuration({ lab }: { lab: Lab }) {
           autoComplete="off"
           value={token}
           onChange={(e) => setToken(e.target.value)}
-          placeholder="Server token · never stored"
+          placeholder={t("Server token · never stored")}
         />
       </label>
       <button

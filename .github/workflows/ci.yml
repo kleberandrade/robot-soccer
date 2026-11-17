@@ -49,6 +49,7 @@ jobs:
           npm run test:remote-clients
           npm run test:site-smoke
           npm run test:i18n-smoke
+          npm run test:translations
       - uses: actions/upload-artifact@v4
         if: always()
         with:

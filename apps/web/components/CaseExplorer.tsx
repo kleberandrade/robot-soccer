@@ -1,6 +1,6 @@
 "use client";
 
-import { T } from "../i18n/client";
+import { T, useI18n } from "../i18n/client";
 
 import { Component, useState, type ReactNode } from "react";
 import dynamic from "next/dynamic";
@@ -35,6 +35,7 @@ class CaseGuard extends Component<
   }
 }
 export default function CaseExplorer() {
+  const { t } = useI18n();
   const [exploded, setExploded] = useState(false),
     [xray, setXray] = useState(false);
   return (
@@ -62,7 +63,7 @@ export default function CaseExplorer() {
       </div>
       <div
         className="case-canvas"
-        aria-label="Interactive 3D robot case assembly"
+        aria-label={t("Interactive 3D robot case assembly")}
       >
         <CaseGuard>
           <CaseScene exploded={exploded} xray={xray} />

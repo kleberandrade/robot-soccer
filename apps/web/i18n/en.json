@@ -3,5 +3,7 @@
   "Baixar todos os STL + guia (ZIP)": "Download all STL + guide (ZIP)",
   "Ler o guia de impressão e montagem": "Read the printing and assembly guide",
   "Baixar o guia separado (Markdown)": "Download the guide separately (Markdown)",
-  "Quatro STL em milímetros, guia didático em português, desenho cotado e fonte CAD editável. Protótipo Rev A, ainda sem impressão ou montagem física validadas.": "Four STL files in millimeters, a didactic guide, dimension drawing and editable CAD source. Rev A prototype; printing and physical assembly remain unvalidated."
+  "Quatro STL em milímetros, guia didático em português, desenho cotado e fonte CAD editável. Protótipo Rev A, ainda sem impressão ou montagem física validadas.": "Four STL files in millimeters, a didactic guide, dimension drawing and editable CAD source. Rev A prototype; printing and physical assembly remain unvalidated.",
+  "Pacote completo do case": "Complete case package",
+  "Guia de impressão e montagem": "Printing and assembly guide"
 }

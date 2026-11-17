@@ -19,6 +19,7 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 export default async function Hardware() {
+  const t = await getTranslator();
   const text = await readFile(
     path.resolve(process.cwd(), "../../hardware/README.md"),
     "utf8",
@@ -111,7 +112,7 @@ export default async function Hardware() {
         <object
           type="image/svg+xml"
           data="/hardware/electronics.svg"
-          aria-label="Original ESP32-C3 wiring diagram"
+          aria-label={t("Original ESP32-C3 wiring diagram")}
         >
           <a href="/hardware/wiring.svg">
             <T>{"View wiring diagram"}</T>
@@ -119,7 +120,9 @@ export default async function Hardware() {
         </object>
       </div>
       <article className="article-body">
-        <MarkdownContent>{text.replace(/^# /, "## ")}</MarkdownContent>
+        <MarkdownContent>
+          {(await localizeDocument("hardware", text)).replace(/^# /, "## ")}
+        </MarkdownContent>
       </article>
       <HardwareTables />
     </DocumentLayout>

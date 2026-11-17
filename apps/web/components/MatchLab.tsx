@@ -1,7 +1,7 @@
 "use client";
 import { LocalLink as Link } from "../i18n/client";
 
-import { T } from "../i18n/client";
+import { T, useI18n } from "../i18n/client";
 
 import dynamic from "next/dynamic";
 import SiteHeader from "./SiteHeader";
@@ -20,6 +20,7 @@ const Arena = dynamic(() => import("./Arena"), {
   ),
 });
 export default function MatchLab() {
+  const { t } = useI18n();
   const lab = useMatchLab();
   const { shown, row, message, trail, trails, setTrails, camera, rig } = lab;
   return (
@@ -117,7 +118,7 @@ export default function MatchLab() {
                 </div>
                 <div
                   className="arena-view"
-                  aria-label="Live 3D robot soccer field"
+                  aria-label={t("Live 3D robot soccer field")}
                   data-testid="arena-3d"
                   data-tick={shown.tick}
                 >

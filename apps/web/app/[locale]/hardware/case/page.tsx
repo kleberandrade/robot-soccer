@@ -21,6 +21,7 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 export default async function CasePage() {
+  const t = await getTranslator();
   const locale = await getLocale();
   const guideName = {
     "pt-BR": "GUIA-IMPRESSAO-E-MONTAGEM.md",
@@ -67,7 +68,10 @@ export default async function CasePage() {
             </T>
           </p>
         </div>
-        <section className="case-bundle" aria-label="Pacote completo do case">
+        <section
+          className="case-bundle"
+          aria-label={t("Pacote completo do case")}
+        >
           <div>
             <h2>
               <T>{"Todas as peças, um único download."}</T>
@@ -193,7 +197,9 @@ export default async function CasePage() {
           <a href="/hardware/case/dimensions.svg">
             <Image
               src="/hardware/case/dimensions.svg"
-              alt="Top and side dimension drawing of the proposed robot case"
+              alt={t(
+                "Top and side dimension drawing of the proposed robot case",
+              )}
               width={1400}
               height={800}
               unoptimized
@@ -267,7 +273,7 @@ export default async function CasePage() {
         <section
           id="guia-impressao"
           className="hardware-article case-print-guide"
-          aria-label="Guia de impressão e montagem"
+          aria-label={t("Guia de impressão e montagem")}
         >
           <a href={`/hardware/case/${guideName}`} download>
             <T>{"Baixar o guia separado (Markdown)"}</T>

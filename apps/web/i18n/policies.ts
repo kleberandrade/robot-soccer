@@ -56,7 +56,7 @@ Ajude a tornar o laboratório mais claro, reproduzível e útil. Você pode cont
 
 ## 1. Escolha uma melhoria pequena
 
-Consulte as [issues](https://github.com/kleberandrade/robot-soccer/issues) e abra uma proposta com problema, comportamento esperado e como reproduzir. Para erros, informe versão e ambiente, removendo chaves, arquivos de conexão e dados pessoais. Não publique vulnerabilidades ou segredos em detalhes; procure primeiro um canal privado do mantenedor.
+Consulte as [tarefas e problemas](https://github.com/kleberandrade/robot-soccer/issues) e abra uma proposta com problema, comportamento esperado e como reproduzir. Para erros, informe versão e ambiente, removendo chaves, arquivos de conexão e dados pessoais. Não publique vulnerabilidades ou segredos em detalhes; procure primeiro um canal privado do mantenedor.
 
 ## 2. Prepare o projeto
 

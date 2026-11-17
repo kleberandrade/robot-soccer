@@ -15,11 +15,12 @@ export async function generateMetadata(): Promise<Metadata> {
     ),
   };
 }
-export default function Library() {
+export default async function Library() {
+  const t = await getTranslator();
   return (
     <div className="public-site">
       <SiteHeader active="/docs" />
-      <main className="learning-library">
+      <main className="learning-library site-container">
         <header>
           <span className="section-kicker">
             <T>{"THE LEARNING LIBRARY"}</T>
@@ -51,9 +52,7 @@ export default function Library() {
                   <T>{"LESSON"}</T>
                   <T>{String(i + 1).padStart(2, "0")}</T>
                 </span>
-                <h3>
-                  <T>{a.title.replace(/^\d+\. /, "")}</T>
-                </h3>
+                <h3>{t(a.title).replace(/^\d+\. /, "")}</h3>
                 <p>
                   <T>{a.summary}</T>
                 </p>

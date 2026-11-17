@@ -16,13 +16,9 @@ export async function generateMetadata(): Promise<Metadata> {
     ),
   };
 }
-function FieldPreview() {
+function FieldPreview({ label }: { label: string }) {
   return (
-    <svg
-      viewBox="0 0 760 600"
-      role="img"
-      aria-label="A miniature robot soccer field with two autonomous teams"
-    >
+    <svg viewBox="0 0 760 600" role="img" aria-label={label}>
       <defs>
         <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
           <path
@@ -111,7 +107,8 @@ function FieldPreview() {
     </svg>
   );
 }
-export default function Home() {
+export default async function Home() {
+  const t = await getTranslator();
   return (
     <div className="public-site">
       <SiteHeader active="/" />
@@ -158,7 +155,11 @@ export default function Home() {
                   <T>{"01 / SIMULATION"}</T>
                 </span>
               </div>
-              <FieldPreview />
+              <FieldPreview
+                label={t(
+                  "A miniature robot soccer field with two autonomous teams",
+                )}
+              />
               <div className="field-spec-strip">
                 <span>
                   <strong>1.50 × 1.30</strong>
@@ -268,7 +269,7 @@ export default function Home() {
             </div>
             <Image
               src="/learning/laboratory.jpg"
-              alt="Laboratory with synchronized 3D and camera views"
+              alt={t("Laboratory with synchronized 3D and camera views")}
               width={1905}
               height={866}
             />

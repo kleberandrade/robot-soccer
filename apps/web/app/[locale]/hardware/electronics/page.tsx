@@ -14,7 +14,8 @@ export async function generateMetadata(): Promise<Metadata> {
     ),
   };
 }
-export default function Electronics() {
+export default async function Electronics() {
+  const t = await getTranslator();
   return (
     <div className="public-site">
       <SiteHeader active="/hardware" />
@@ -74,7 +75,9 @@ export default function Electronics() {
           <object
             type="image/svg+xml"
             data="/hardware/electronics.svg"
-            aria-label="Detailed electronic diagram with power protection, ESP32, motor driver, motors and programming"
+            aria-label={t(
+              "Detailed electronic diagram with power protection, ESP32, motor driver, motors and programming",
+            )}
           >
             <a href="/hardware/electronics.svg">
               <T>{"Open schematic"}</T>

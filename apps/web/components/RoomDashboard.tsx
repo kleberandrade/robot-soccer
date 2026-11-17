@@ -1,4 +1,5 @@
 "use client";
+import { eventMessage } from "../i18n/events";
 
 import { T, useI18n } from "../i18n/client";
 
@@ -299,9 +300,7 @@ export default function RoomDashboard({ lab }: { lab: Lab }) {
               <time>
                 <T>{time(e.matchTick)}</T>
               </time>
-              <span>
-                <T>{e.message}</T>
-              </span>
+              <span>{eventMessage(locale, e)}</span>
             </p>
           ))}
       </section>
