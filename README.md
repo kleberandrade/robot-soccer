@@ -9,6 +9,8 @@
 
 An autonomous 3×3 Very Small Size Soccer laboratory: deterministic simulation, a real 3D Next.js viewer, bounded server execution, PostgreSQL checkpoints, two example strategies, and an ESP32 radio/drive reference. This is an experimental platform, not a certified competition system.
 
+![Public 3D match laboratory with a server match persisted in Neon](docs/assets/match-lab.jpg)
+
 ## Run locally
 
 Use Node.js 22 or newer and npm (the exact package-manager version is recorded in `package.json`).
