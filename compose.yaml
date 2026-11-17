@@ -1,0 +1,15 @@
+services:
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: soccer
+      POSTGRES_PASSWORD: local-development-only
+      POSTGRES_DB: soccer
+    ports: ["127.0.0.1:54329:5432"]
+    volumes: ["soccer-data:/var/lib/postgresql/data"]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U soccer"]
+      interval: 2s
+      retries: 20
+volumes:
+  soccer-data:

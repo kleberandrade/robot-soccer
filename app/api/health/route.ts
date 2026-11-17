@@ -1,0 +1,1 @@
+export async function GET(){return Response.json({service:'robot-soccer',protocol:1,persistenceConfigured:Boolean(process.env.DATABASE_URL),operatorConfigured:Boolean(process.env.MATCH_ADMIN_TOKEN&&process.env.MATCH_ADMIN_TOKEN.length>=32)});}
