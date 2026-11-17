@@ -1,3 +1,6 @@
+import { readFile } from "node:fs/promises";
+import path from "node:path";
+import MarkdownContent from "../../../components/MarkdownContent";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
@@ -9,7 +12,14 @@ export const metadata: Metadata = {
   description:
     "Inspect a parametric 70 mm robot case in 3D, explore its assembly and download closed-manifold STL concept files.",
 };
-export default function CasePage() {
+export default async function CasePage() {
+  const guide = await readFile(
+    path.resolve(
+      process.cwd(),
+      "public/hardware/case/GUIA-IMPRESSAO-E-MONTAGEM.md",
+    ),
+    "utf8",
+  );
   return (
     <div className="public-site">
       <SiteHeader active="/hardware" />
@@ -38,6 +48,28 @@ export default function CasePage() {
             of mass and physical competition inspection remain unverified.
           </p>
         </div>
+        <section className="case-bundle" aria-label="Pacote completo do case">
+          <div>
+            <h2>Todas as peças, um único download.</h2>
+            <p>
+              Quatro STL em milímetros, guia didático em português, desenho
+              cotado e fonte CAD editável. Protótipo Rev A, ainda sem impressão
+              ou montagem física validadas.
+            </p>
+          </div>
+          <div>
+            <a
+              className="site-button"
+              href="/hardware/case/robot-soccer-case-rev-a.zip"
+              download
+            >
+              Baixar todos os STL + guia (ZIP)
+            </a>
+            <a className="case-guide-link" href="#guia-impressao">
+              Ler o guia de impressão e montagem
+            </a>
+          </div>
+        </section>
         <CaseExplorer />
         <div className="case-specs">
           <article>
@@ -147,6 +179,16 @@ export default function CasePage() {
             printability, temperature performance, mechanical strength or
             compliance of an assembled robot.
           </p>
+        </section>
+        <section
+          id="guia-impressao"
+          className="hardware-article case-print-guide"
+          aria-label="Guia de impressão e montagem"
+        >
+          <a href="/hardware/case/GUIA-IMPRESSAO-E-MONTAGEM.md" download>
+            Baixar o guia separado (Markdown)
+          </a>
+          <MarkdownContent>{guide}</MarkdownContent>
         </section>
       </main>
       <SiteFooter />

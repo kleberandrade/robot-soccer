@@ -2920,3 +2920,57 @@ h1 {
 .room-heading h1 {
   overflow-wrap: anywhere;
 }
+
+.case-bundle {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2rem;
+  margin: 2rem 0;
+  background: #e1eae4;
+  border: 1px solid #c7d5cc;
+  border-radius: 8px;
+}
+.case-bundle h2 {
+  font-size: 1.5rem;
+  margin: 0 0 0.6rem;
+}
+.case-bundle p {
+  max-width: 640px;
+  line-height: 1.7;
+  margin: 0;
+}
+.case-bundle > div:last-child {
+  flex-shrink: 0;
+  display: grid;
+  gap: 1rem;
+}
+.case-guide-link {
+  font-size: 0.85rem;
+  text-align: center;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.case-print-guide {
+  scroll-margin-top: 2rem;
+  border-top: 1px solid #c7d5cc;
+  padding-top: 2rem;
+}
+.case-print-guide h1 {
+  font-size: 2rem;
+}
+@media (max-width: 760px) {
+  .case-bundle {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 1.25rem;
+  }
+  .case-bundle > div:last-child {
+    flex-shrink: 1;
+  }
+  .case-bundle .site-button {
+    white-space: normal;
+    text-align: center;
+  }
+}

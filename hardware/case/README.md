@@ -32,3 +32,7 @@ The battery keepout is a maximum 25 × 45 × 18 mm box behind the drive motors, 
 The 1.8 mm pilot and 2.4 mm clearance holes are prototype dimensions. Test a coupon and adapt them to actual screw type/material. Keep sharp fasteners out of the battery bay. Use a nonconductive case and preserve the module antenna keepout without metal, battery foil or a ground plane in the required region. Switch opening, strain relief, battery retention, printer tolerances, support layout and heat paths remain physical engineering work.
 
 The tray/deck nominal battery-intersection checks and closed-edge checks are recorded in the mesh report. No material density, center of mass, structural simulation or printed prototype is claimed.
+
+## Download and printing guide
+
+The case page provides a single ZIP containing all four STL files, the Portuguese `GUIA-IMPRESSAO-E-MONTAGEM.md`, dimension drawing, parameters, mesh report and editable source. The archive is regenerated from an explicit allowlist by `tools/sync-hardware.ts` before every web build. The same guide is readable on the case page and covers slicing, nominal orientations, fit coupons, provisional fasteners, dry assembly and inspection; settings are proposals awaiting physical validation.

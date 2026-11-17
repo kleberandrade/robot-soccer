@@ -1,5 +1,6 @@
-import { copyFile, mkdir } from "node:fs/promises";
+import { copyFile, mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
+import { zipSync } from "fflate";
 import { fileURLToPath } from "node:url";
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), ".."),
   target = path.join(root, "apps/web/public/hardware");
@@ -9,6 +10,10 @@ const files = [
   ["hardware/pinmap.csv", "pinmap.csv"],
   ["hardware/electronics.svg", "electronics.svg"],
   ["hardware/connections.csv", "connections.csv"],
+  [
+    "hardware/case/GUIA-IMPRESSAO-E-MONTAGEM.md",
+    "case/GUIA-IMPRESSAO-E-MONTAGEM.md",
+  ],
   ["hardware/case/dimensions.json", "case/dimensions.json"],
   ["hardware/case/mesh-report.json", "case/mesh-report.json"],
   ["hardware/case/generate.py", "case/generate.py"],
@@ -29,4 +34,35 @@ for (const [source, destination] of files) {
   });
   await copyFile(path.join(root, source), path.join(target, destination));
 }
+// Explicit archive contents prevent accidentally publishing unrelated local files.
+const bundleFiles = [
+  "tray.stl",
+  "lid.stl",
+  "electronics-deck.stl",
+  "skid.stl",
+  "GUIA-IMPRESSAO-E-MONTAGEM.md",
+  "dimensions.svg",
+  "dimensions.json",
+  "mesh-report.json",
+  "generate.py",
+  "requirements.txt",
+];
+const entries = await Promise.all(
+  bundleFiles.map(
+    async (name) =>
+      [
+        name,
+        [
+          new Uint8Array(
+            await readFile(path.join(root, "hardware/case", name)),
+          ),
+          { mtime: new Date("2026-11-17T00:00:00Z") },
+        ],
+      ] as const,
+  ),
+);
+await writeFile(
+  path.join(target, "case/robot-soccer-case-rev-a.zip"),
+  zipSync(Object.fromEntries(entries), { level: 9 }),
+);
 console.log("Synchronized public hardware and example-only firmware sources.");
