@@ -21,3 +21,9 @@ The firmware validates exact packet length, magic/version/robot ID, wheel range 
 - **Medium — unvalidated actuation.** PWM is open-loop; no measured speed, encoders, odometry, battery sensor or independent external safety controller is implemented. A valid packet can move a correctly configured physical robot. Supervised bench validation, wheels clear of the surface and a physical cutoff are required before use.
 
 No high/critical finding was identified in the limited reviewed scope. That statement is scoped to the current design and checks, not a production security certification. Report issues privately to the repository owner; never attach live tokens or WLAN credentials to public issues.
+
+## Private remote competitions
+
+Private rooms are stored separately from public matches. A room ID alone does not authorize a read. The operator creates independent host, spectator and single-claim team capabilities; persistent credentials/invitations are SHA-256 hashes of high-entropy random secrets. Reads and responses use no-store. Team keys authorize only their own commands; host referee mutations require the host role. Queued opponent commands are omitted from observations. A monotonic turn plus atomic compare-and-swap prevents unilateral or duplicate advancement. Pauses clear pending commands. Missing participants freeze progression. Room access expires after 24 hours.
+
+The browser keeps keys in memory and supports an explicitly downloaded connection file; keys do not enter URLs or localStorage. Keep invitation codes and exported environment files private. The service runs no uploaded participant source. Creation remains single-operator; there is no anonymous key recovery or production tournament identity model. See the private-room ADR and remote guide for operational limits.
