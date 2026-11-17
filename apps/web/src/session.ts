@@ -6,6 +6,7 @@ import {
   type Action,
   type Config,
   type Strategy,
+  type Decision,
 } from "@robot-soccer/engine";
 import type { MatchRow } from "@robot-soccer/database";
 export type Packet = MatchRow & { frames?: Match[] };
@@ -136,6 +137,14 @@ export class MatchSession {
         this.callbacks.show(this.state);
       }
       if (action === "reset") this.callbacks.resetTrail();
+    });
+  }
+  decide(decision:Decision){
+    return this.run(async()=>{
+      this.queue=[];
+      if(this.server){const c=this.server;this.receive(await this.request(`/api/matches/${c.id}`,'PATCH',{revision:c.revision,action:'decision',decision}));}
+      else{const {decideReferee}=await import('@robot-soccer/engine');this.state=decideReferee(this.state,decision);this.callbacks.show(this.state);}
+      this.callbacks.resetTrail();
     });
   }
   connect(config: Config, strategies: Strategies, id?: string) {

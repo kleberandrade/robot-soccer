@@ -1,17 +1,23 @@
 import { describe, it, expect } from "vitest";
 import {
-  createMatch,
+  createMatch as createConfiguredMatch,
+  USER_CONFIG,
+  ROBOT_RADIUS,
   referee,
   step,
   advance,
   parseCommands,
   observe,
   DT,
-  CONFIG,
 } from "../src/engine";
 import { autonomous } from "../src/teams";
 
-describe("match rules", () => {
+const CONFIG = USER_CONFIG;
+function createMatch(config = CONFIG) {
+  return createConfiguredMatch(config);
+}
+
+describe("user-reference match rules", () => {
   it("starts safe, pauses, resumes and resets", () => {
     let s = createMatch();
     expect(s.robots).toHaveLength(6);
@@ -39,7 +45,8 @@ describe("match rules", () => {
     expect(a).toEqual(b);
     expect(initial).toEqual(copy);
     expect(DT).toBe(1 / 60);
-    expect(a.robots.some((r, i) => r.x !== initial.robots[i].x)).toBe(true);
+    expect(a.elapsedTicks).toBeGreaterThan(0);
+    expect(a).not.toEqual(initial);
   });
   it("changes ends after a timed interval and finishes after two periods", () => {
     let s = referee(
@@ -88,10 +95,10 @@ describe("match rules", () => {
     for (let i = 0; i < 25; i++) s = advance(s, 120);
     for (const r of s.robots) {
       expect(Math.abs(r.x)).toBeLessThanOrEqual(
-        s.config.length / 2 - 0.053 + 1e-8,
+        s.config.length / 2 - ROBOT_RADIUS + 1e-8,
       );
       expect(Math.abs(r.y)).toBeLessThanOrEqual(
-        s.config.width / 2 - 0.053 + 1e-8,
+        s.config.width / 2 - ROBOT_RADIUS + 1e-8,
       );
     }
   });
@@ -146,9 +153,9 @@ describe("physical trajectory regression cases", () => {
     expect(s.elapsedTicks).toBe(0);
     expect(s.period).toBe(1);
     expect(s.phaseTicks).toBe(0);
-    expect(s.version).toBe(1);
+    expect(s.version).toBe(2);
     expect(s.score).toEqual({ blue: 0, yellow: 0 });
-    expect(s.timeouts).toEqual({ blue: false, yellow: false });
+    expect(s.timeouts).toEqual({ blue: 0, yellow: 0 });
     expect(s.ball).toEqual({ x: 0, y: 0, vx: 0, vy: 0 });
     for (const [team, sign] of [
       ["blue", 1],
@@ -206,11 +213,11 @@ describe("physical trajectory regression cases", () => {
       s.robots[0].y = sign * 0.547;
       s.robots[0].angle = sign > 0 ? Math.PI / 4 : (-3 * Math.PI) / 4;
       const r = step(s, [{ id: "blue-0", left: 0.6, right: 0.6 }]).robots[0];
-      expect(r.x).toBeCloseTo(sign * 0.697, 12);
-      expect(r.y).toBeCloseTo(sign * 0.547, 12);
+      expect(r.x).toBeCloseTo(sign * (0.75 - ROBOT_RADIUS), 12);
+      expect(r.y).toBeCloseTo(sign * (0.6 - ROBOT_RADIUS), 12);
     }
     const timeout = referee(s, "timeout-yellow");
-    expect(timeout.timeouts).toEqual({ blue: false, yellow: true });
+    expect(timeout.timeouts).toEqual({ blue: 0, yellow: 1 });
     expect(timeout.phaseTicks).toBe(0);
   });
   it("scores each attacking direction and resets ball motion", () => {
@@ -238,8 +245,8 @@ describe("collision impulses", () => {
     s.robots[1].y = 0;
     s.ball.y = 0.5;
     const result = step(s, []);
-    expect(result.robots[0].x).toBeCloseTo(-0.043, 12);
-    expect(result.robots[1].x).toBeCloseTo(0.063, 12);
+    expect(result.robots[0].x).toBeCloseTo(0.01 - ROBOT_RADIUS, 12);
+    expect(result.robots[1].x).toBeCloseTo(0.01 + ROBOT_RADIUS, 12);
     expect(result.robots[0].y).toBe(0);
     expect(result.robots[1].y).toBe(0);
   });
@@ -250,7 +257,7 @@ describe("collision impulses", () => {
     s.ball = { x: 0, y: 0.05, vx: 0, vy: -0.1 };
     const b = step(s, []).ball;
     expect(b.x).toBe(0);
-    expect(b.y).toBeCloseTo(0.07435, 12);
+    expect(b.y).toBeCloseTo(ROBOT_RADIUS + 0.02135, 12);
     expect(b.vx).toBe(0);
     expect(b.vy).toBeCloseTo(0.0495, 12);
   });
@@ -260,7 +267,7 @@ describe("collision impulses", () => {
     s.robots[0].y = 0;
     s.ball = { x: 0, y: 0, vx: 0, vy: 0 };
     const b = step(s, []).ball;
-    expect(b).toEqual({ x: 0.07435, y: 0, vx: 0, vy: 0 });
+    expect(b).toEqual({ x: ROBOT_RADIUS + 0.02135, y: 0, vx: 0, vy: 0 });
   });
   it("does not bounce a separating ball back into a robot", () => {
     const s = referee(createMatch(), "start");

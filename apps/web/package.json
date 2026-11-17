@@ -1,6 +1,6 @@
 {
   "name": "@robot-soccer/web",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -14,13 +14,15 @@
   "dependencies": {
     "@react-three/drei": "^10.7.9",
     "@react-three/fiber": "^9.8.2",
+    "@robot-soccer/database": "*",
+    "@robot-soccer/engine": "*",
+    "@robot-soccer/protocol": "*",
     "next": "^16.4.6",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
+    "react-markdown": "^10.1.0",
+    "remark-gfm": "^4.0.1",
     "three": "^0.187.0",
-    "zod": "^4.6.7",
-    "@robot-soccer/engine": "*",
-    "@robot-soccer/protocol": "*",
-    "@robot-soccer/database": "*"
+    "zod": "^4.6.7"
   }
 }

@@ -54,3 +54,38 @@ it("returns safe client errors and hides database error details", async () => {
   expect(response.status).toBe(503);
   expect(await response.text()).not.toContain("private");
 });
+it("validates referee ownership and persists a stopped penalty through the update boundary", () => {
+  const s = newMatch({});
+  const next = applyUpdate(
+    s,
+    UpdateSchema.parse({
+      revision: 0,
+      action: "decision",
+      decision: { kind: "defensive-overload", team: "yellow" },
+    }),
+  );
+  expect(next.state.restart?.kind).toBe("penalty");
+  expect(next.state.restart?.team).toBe("blue");
+  expect(next.state.officials.fouls.yellow).toBe(1);
+  expect(next.frames).toEqual([]);
+  expect(
+    applyUpdate(
+      next.state,
+      UpdateSchema.parse({ revision: 1, action: "advance" }),
+    ).state,
+  ).toEqual(next.state);
+  expect(() =>
+    UpdateSchema.parse({
+      revision: 0,
+      action: "decision",
+      decision: { kind: "handling", team: "yellow", robotId: "blue-0" },
+    }),
+  ).toThrow();
+  expect(() =>
+    UpdateSchema.parse({
+      revision: 0,
+      action: "decision",
+      decision: { kind: "invented", team: "blue" },
+    }),
+  ).toThrow();
+});

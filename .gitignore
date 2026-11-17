@@ -14,3 +14,5 @@ firmware/include/secrets.h
 .tools-venv/
 .pio-core/
 .turbo/
+
+.research/

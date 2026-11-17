@@ -1,6 +1,6 @@
 import { neon } from "@neondatabase/serverless";
 import { Pool } from "pg";
-import type { Match } from "@robot-soccer/engine";
+import { hydrateMatch,type Match } from "@robot-soccer/engine";
 export type MatchRow = { id: string; revision: number; state: Match };
 export async function query(
   text: string,
@@ -27,9 +27,10 @@ export async function insertMatch(id: string, state: Match): Promise<MatchRow> {
   return rows[0] as MatchRow;
 }
 export async function getMatch(id: string): Promise<MatchRow | undefined> {
-  return (
-    await query("SELECT id,revision,state FROM matches WHERE id=$1", [id])
-  )[0] as MatchRow | undefined;
+  const row=(await query("SELECT id,revision,state FROM matches WHERE id=$1",[id]))[0];
+  if(!row)return undefined;
+  if(typeof row.id!=='string'||typeof row.revision!=='number')throw new Error('Invalid persisted match row');
+  return {id:row.id,revision:row.revision,state:hydrateMatch(row.state)};
 }
 export async function saveMatch(
   id: string,

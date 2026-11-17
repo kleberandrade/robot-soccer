@@ -1,17 +1,23 @@
-# Protocol v1 and trusted team workflow
+# Wheel protocol v1, match state v2 and trusted team workflow
 
 Coordinates are meters about field center; x runs along length and y across width. Angles are radians about the vertical axis. Blue attacks +x in the first half, yellow −x, with direction reversed in the second half. Time is integer 60 Hz ticks; wheel velocities are m/s, bounded to ±0.6. IDs are `blue-0..2` and `yellow-0..2`.
 
-`observe(state, team)` returns `{version:1, team, state}` as an independent deep copy. Observations contain perfect simulated positions, not camera detections. Each built-in strategy returns up to three `{id,left,right}` commands. Every command is validated for finite values, range, duplicate IDs and team ownership. Missing commands mean stopped wheels. Referee management commands are outside this team-command interface. Strategies execute synchronously only because they are registered project code; this is not isolation against malicious programs.
+`observe(state, team)` returns `{version:1, team, state}` as an independent deep copy. Observations contain perfect simulated positions, not camera detections. Each built-in strategy returns up to three `{id,left,right}` commands. Every command is validated for finite values, range, duplicate IDs and team ownership. Missing commands request zero target speed. Actual speed slews toward the target under the configured motor acceleration; referee stops set both to zero immediately. Referee management commands are outside this team-command interface. Strategies execute synchronously only because they are registered project code; this is not isolation against malicious programs.
 
-Run `npm run simulate` for an entire deterministic match and a final SHA-256 of its state. The engine package exposes `createMatch`, `observe`, `referee`, `step` and bounded `advance`; the teams entrypoint exposes `autonomous`. Tests demonstrate custom command injection into a local simulation. There is no upload/compile endpoint or server-side execution of unknown teams.
+Run `npm run simulate` for an entire deterministic match and a final SHA-256 of its state. The engine package exposes `createMatch`, `observe`, `referee`, `step` and bounded `advance`; the teams entrypoint exposes `autonomous`, `koativa` and `circuit`. Tests demonstrate custom command injection into a local simulation. There is no upload/compile endpoint or server-side execution of unknown teams.
+
+## Authoritative state and compatibility
+
+The current match has `version:2`: actual/target wheel speeds, integrated left/right wheel angles (radians), exclusion metadata, numeric timeout counts, restart setup/live state and bounded referee history/counters. Team observations retain envelope `version:1`; radio/command format is unchanged. A stopped restart uses phase `stoppage`, and `start` is the whistle. Advancing a stopped match consumes no playing ticks.
+
+Persisted version-1 checkpoints are upgraded on read without rewriting stored data: old dimensions/timing and manual-only instantaneous-drive behavior are preserved, boolean timeouts become counts, and new referee/wheel fields receive safe defaults. The next authenticated update saves v2. Existing replay chunks keep their original checkpoint version; replay consumers must hydrate each checkpoint before feeding the current engine. A camera configuration is local presentation state, not authoritative control.
 
 ## HTTP
 
 - `GET /api/health`: configuration indicators, not a connectivity assertion.
 - `POST /api/matches`: operator bearer token; JSON `{config?,strategies?}` creates a UUID match at revision 0. Only `balanced` and `press` are registered.
 - `GET /api/matches/:id`: public UUID read, no cache.
-- `PATCH /api/matches/:id`: bearer token; `{revision,action,ticks?}`. Actions: `advance`, `start`, `pause`, `reset`, `timeout-blue`, `timeout-yellow`. Only advance uses ticks (1–120, default 120). Returns `{id,revision,state,frames?}`. Stale revisions return 409. Invalid input/transitions return 400, authentication failures 401, absent matches 404, and unavailable persistence 503.
+- `PATCH /api/matches/:id`: bearer token; `{revision,action,ticks?}`. Actions: `advance`, `start`, `pause`, `reset`, `timeout-blue`, `timeout-yellow`, and `decision`. A decision body is `{revision,action:"decision",decision:{kind,team,robotId?}}`; `team` is the offending side, and an optional robot ID must belong to it. See the engine DecisionSchema for the bounded incident list. Only advance uses ticks (1–120, default 120). Returns `{id,revision,state,frames?}`. Stale revisions return 409. Invalid input/transitions return 400, authentication failures 401, absent matches 404, and unavailable persistence 503.
 - `GET /api/matches/:id/replay?after=0`: at most 20 ordered chunks and a `next` revision cursor. Each chunk includes the action, frames and authoritative checkpoint. Continue with `after=next` until empty. The current UI links the export; it does not offer a full timeline editor.
 
 Mutating bodies are limited to 4096 bytes, including streaming requests without a Content-Length. SQL is parameterized. UUID knowledge grants spectator access, so do not store private participant information in match state. Clients must recover from 409 by reloading the match. The last batch may run ahead of the displayed frame; pausing displays the current authoritative checkpoint.

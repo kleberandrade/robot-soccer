@@ -1,6 +1,17 @@
 "use client";
 import { useEffect, useState } from "react";
-import { CONFIG, createMatch, type Match } from "@robot-soccer/engine";
+import {
+  CONFIG,
+  createMatch,
+  type Match,
+  type Config,
+  type Decision,
+} from "@robot-soccer/engine";
+import {
+  DEFAULT_CAMERA,
+  CameraSchema,
+  type CameraConfig,
+} from "@robot-soccer/engine/camera";
 import type { MatchRow } from "@robot-soccer/database";
 import { MatchSession, type Strategies } from "../src/session";
 export function useMatchLab() {
@@ -12,9 +23,12 @@ export function useMatchLab() {
       "Local preview. Connect a dedicated database to save server matches.",
     );
   const [trail, setTrail] = useState<[number, number][]>([]),
-    [trails, setTrails] = useState(true),
-    [plan, setPlan] = useState(false);
-  const [config, setConfig] = useState({ ...CONFIG }),
+    [trails, setTrails] = useState(true);
+  const [camera, setCameraState] = useState<CameraConfig>({
+      ...DEFAULT_CAMERA,
+    }),
+    [rig, setRig] = useState(false);
+  const [config, setConfig] = useState<Config>({ ...CONFIG }),
     [strategies, setStrategies] = useState<Strategies>({
       blue: "balanced",
       yellow: "press",
@@ -50,6 +64,14 @@ export function useMatchLab() {
   }, [row]);
   return {
     shown,
+    camera,
+    rig,
+    setRig,
+    setCamera: (next: CameraConfig) => {
+      const result = CameraSchema.safeParse(next);
+      if (result.success) setCameraState(result.data);
+    },
+    decide: (decision: Decision) => session.decide(decision),
     row,
     busy,
     token,
@@ -58,8 +80,6 @@ export function useMatchLab() {
     trail,
     trails,
     setTrails,
-    plan,
-    setPlan,
     config,
     setConfig,
     strategies,

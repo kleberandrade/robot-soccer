@@ -6,5 +6,6 @@ const config: NextConfig = {
     "@robot-soccer/database",
   ],
   poweredByHeader: false,
+  outputFileTracingIncludes: { "/docs/*": ["../../docs/articles/**/*.md"] },
 };
 export default config;

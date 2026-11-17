@@ -2,6 +2,7 @@ export async function GET() {
   return Response.json({
     service: "robot-soccer",
     protocol: 1,
+    engine: 2,
     persistenceConfigured: Boolean(process.env.DATABASE_URL),
     operatorConfigured: Boolean(
       process.env.MATCH_ADMIN_TOKEN &&

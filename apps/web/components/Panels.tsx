@@ -1,6 +1,14 @@
 "use client";
-import type { Match, Action, Strategy } from "@robot-soccer/engine";
+import {
+  CONFIG,
+  USER_CONFIG,
+  type Match,
+  type Action,
+  type Strategy,
+} from "@robot-soccer/engine";
 import type { Lab } from "./useMatchLab";
+export const teamName = (strategy: Strategy) =>
+  strategy === "balanced" ? "Koativa" : "Circuit";
 export const time = (ticks: number) =>
   `${Math.floor(ticks / 3600)
     .toString()
@@ -25,7 +33,30 @@ export function Configuration({ lab }: { lab: Lab }) {
   } = lab;
   return (
     <details className="panel config-panel">
-      <summary>02 / Configure & connect</summary>
+      <summary>04 / Dimensions, teams & connection</summary>
+      <label>
+        Reference preset
+        <select
+          value={config.ruleset}
+          onChange={(e) =>
+            setConfig(
+              e.target.value === "vsss-larc-reference"
+                ? { ...CONFIG }
+                : e.target.value === "user-reference"
+                  ? { ...USER_CONFIG }
+                  : { ...config, ruleset: "custom" },
+            )
+          }
+        >
+          <option value="vsss-larc-reference">
+            VSSS / organizer-linked LARC reference
+          </option>
+          <option value="user-reference">
+            Original user reference / 1.50 × 1.20 m
+          </option>
+          <option value="custom">Custom training configuration</option>
+        </select>
+      </label>
       <p className="help">
         Configuration applies to a new match. Preview is local; server matches
         use a dedicated PostgreSQL database.
@@ -35,6 +66,12 @@ export function Configuration({ lab }: { lab: Lab }) {
           [
             "length",
             "width",
+            "goalWidth",
+            "robotSide",
+            "robotHeight",
+            "wheelBase",
+            "wheelRadius",
+            "motorAcceleration",
             "halfSeconds",
             "intervalSeconds",
             "timeoutSeconds",
@@ -45,6 +82,12 @@ export function Configuration({ lab }: { lab: Lab }) {
               {
                 length: "Length (m)",
                 width: "Width (m)",
+                goalWidth: "Goal mouth (m)",
+                robotSide: "Robot side (m)",
+                robotHeight: "Robot height (m)",
+                wheelBase: "Axle track (m)",
+                wheelRadius: "Wheel radius (m)",
+                motorAcceleration: "Wheel acceleration (m/s²)",
                 halfSeconds: "Half (s)",
                 intervalSeconds: "Interval (s)",
                 timeoutSeconds: "Timeout (s)",
@@ -52,15 +95,29 @@ export function Configuration({ lab }: { lab: Lab }) {
             }
             <input
               type="number"
-              step={key === "length" || key === "width" ? 0.1 : 1}
+              step={key.endsWith("Seconds") ? 1 : 0.001}
               value={config[key]}
               onChange={(e) =>
-                setConfig({ ...config, [key]: Number(e.target.value) })
+                setConfig({
+                  ...config,
+                  ruleset: "custom",
+                  [key]: Number(e.target.value),
+                })
               }
             />
           </label>
         ))}
       </div>
+      <label className="checkbox-label">
+        <input
+          type="checkbox"
+          checked={config.automaticReferee}
+          onChange={(e) =>
+            setConfig({ ...config, automaticReferee: e.target.checked })
+          }
+        />
+        Automatic referee (simulated contact thresholds)
+      </label>
       {(["blue", "yellow"] as const).map((team) => (
         <label key={team}>
           {team} strategy
@@ -73,8 +130,8 @@ export function Configuration({ lab }: { lab: Lab }) {
               })
             }
           >
-            <option value="balanced">Balanced roles</option>
-            <option value="press">High press</option>
+            <option value="balanced">Koativa / balanced roles</option>
+            <option value="press">Circuit / supporting attack</option>
           </select>
         </label>
       ))}
@@ -134,7 +191,7 @@ export function Roster({ state }: { state: Match }) {
         <div className="roster" key={team}>
           <div className="roster-title">
             <span className={`team-dot ${team}`} />
-            <strong>{team === "blue" ? "Americana" : "Circuit"}</strong>
+            <strong>{teamName(state.strategies[team])}</strong>
             <span>{team.toUpperCase()}</span>
           </div>
           {state.robots
@@ -143,7 +200,11 @@ export function Roster({ state }: { state: Match }) {
               <div className="robot-row" key={r.id}>
                 <span className={`number ${team}`}>{r.id.slice(-1)}</span>
                 <span>{r.role}</span>
-                <code>{((r.left + r.right) / 2).toFixed(2)} m/s</code>
+                <code>
+                  {r.excludedUntil !== null
+                    ? "EXCLUDED"
+                    : `${((r.left + r.right) / 2).toFixed(2)} m/s`}
+                </code>
               </div>
             ))}
         </div>
@@ -153,8 +214,7 @@ export function Roster({ state }: { state: Match }) {
 }
 export function RefereeDesk({ lab }: { lab: Lab }) {
   const { shown, busy, row, token, action } = lab;
-  const active = shown.phase === "running",
-    locked = busy || Boolean(row && !token);
+  const locked = busy || Boolean(row && !token);
   const buttons = refereeButtons(shown, locked);
   return (
     <div className="controls-card">
@@ -178,6 +238,8 @@ export function RefereeDesk({ lab }: { lab: Lab }) {
   );
 }
 function phaseMessage(s: Match) {
+  if (s.phase === "stoppage" && s.restart)
+    return `${s.restart.kind.replaceAll("-", " ")} for ${s.restart.team ?? "both teams"} · press Whistle to resume`;
   if (s.phase === "halftime")
     return `Interval · ${time(s.phaseTicks)} / ${time(s.config.intervalSeconds * 60)}`;
   if (s.phase === "timeout")
@@ -190,15 +252,24 @@ function refereeButtons(shown: Match, locked: boolean) {
   const buttons: [Action, string, boolean][] = [
     [
       active ? "pause" : "start",
-      active ? "Ⅱ Pause" : "▶ Start match",
-      locked || !["ready", "paused", "running"].includes(shown.phase),
+      active
+        ? "Ⅱ Pause"
+        : shown.phase === "stoppage"
+          ? "▶ Whistle / resume"
+          : "▶ Start match",
+      locked ||
+        !["ready", "paused", "running", "stoppage"].includes(shown.phase),
     ],
     ["reset", "↺ Reset", locked],
-    ["timeout-blue", "Blue timeout", locked || !active || shown.timeouts.blue],
+    [
+      "timeout-blue",
+      "Blue timeout",
+      locked || !active || shown.timeouts.blue >= shown.config.timeoutLimit,
+    ],
     [
       "timeout-yellow",
       "Yellow timeout",
-      locked || !active || shown.timeouts.yellow,
+      locked || !active || shown.timeouts.yellow >= shown.config.timeoutLimit,
     ],
   ];
   return buttons;
